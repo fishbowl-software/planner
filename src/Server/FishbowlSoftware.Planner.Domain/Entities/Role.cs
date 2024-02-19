@@ -1,9 +1,8 @@
 ﻿using FishbowlSoftware.Planner.Domain.Core;
 using Microsoft.AspNetCore.Identity;
 
-namespace FishbowlSoftware.Planner.Domain.Entities
+namespace FishbowlSoftware.Planner.Domain.Entities;
+
+public class Role : IdentityRole, IEntity<string>
 {
-    public class Role : IdentityRole, IEntity<string>
-    {
-    }
 }
