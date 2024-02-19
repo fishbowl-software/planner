@@ -16,7 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FishbowlSoftware.Planner.Infrastructure.EF\FishbowlSoftware.Planner.Infrastructure.EF.csproj" />
-      <ProjectReference Include="..\FishbowSoftware.Planner.Migrations.DatabaseProvider\FishbowSoftware.Planner.Migrations.DatabaseProvider.csproj" />
+      <ProjectReference Include="..\FishbowlSoftware.Planner.Migrations.SqlServer\FishbowlSoftware.Planner.Migrations.SqlServer.csproj" />
     </ItemGroup>
 
 </Project>

@@ -12,6 +12,5 @@ namespace FishbowlSoftware.Planner.Infrastructure.Helpers
                 o.EnableRetryOnFailure(8, TimeSpan.FromSeconds(15), null);
             });
         }
-
     }
 }
