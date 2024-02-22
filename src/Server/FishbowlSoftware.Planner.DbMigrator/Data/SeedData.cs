@@ -13,7 +13,6 @@ namespace FishbowlSoftware.Planner.DbMigrator.Data
         private readonly IConfiguration _configuration;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IUnitOfWork _uow;
-        private readonly IWebHostEnvironment _env;
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
 
@@ -22,7 +21,6 @@ namespace FishbowlSoftware.Planner.DbMigrator.Data
             ILogger<SeedData> logger,
             IServiceScopeFactory serviceScopeFactory,
             IUnitOfWork uow,
-            IWebHostEnvironment env,
             RoleManager<Role> roleManager,
             UserManager<User> userManager)
         {
@@ -30,14 +28,14 @@ namespace FishbowlSoftware.Planner.DbMigrator.Data
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;
             _uow = uow;
-            _env = env;
             _roleManager = roleManager;
             _userManager = userManager;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await SeedDatabaseAsync(_env.EnvironmentName);
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            await SeedDatabaseAsync(environment ?? "Development");
         }
 
         private async Task SeedDatabaseAsync(string environment = "Development")

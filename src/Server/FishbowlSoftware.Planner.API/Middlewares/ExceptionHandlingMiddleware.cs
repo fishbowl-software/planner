@@ -2,86 +2,85 @@
 using System.Text;
 using System.Text.Json;
 
-namespace FishbowlSoftware.Planner.API.Middlewares
+namespace FishbowlSoftware.Planner.API.Middlewares;
+
+public class ExceptionHandlingMiddleware
 {
-    public class ExceptionHandlingMiddleware
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly RequestDelegate _next;
+
+    public ExceptionHandlingMiddleware(
+        RequestDelegate next,
+        ILogger<ExceptionHandlingMiddleware> logger)
     {
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-        private readonly RequestDelegate _next;
+        _next = next;
+        _logger = logger;
+    }
 
-        public ExceptionHandlingMiddleware(
-            RequestDelegate next,
-            ILogger<ExceptionHandlingMiddleware> logger)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
-            _logger = logger;
+            await _next(context);
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        catch (Exception ex)
         {
-            try
+            await HandleExceptionAsync(context, ex);
+
+            if (GetStatusCode(ex) == StatusCodes.Status500InternalServerError)
             {
-                await _next(context);
+                // Log unknown error
+                _logger.LogError("{ErrorDescription}\n{StackTrace}", ex.Message, ex.StackTrace);
             }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex);
-
-                if (GetStatusCode(ex) == StatusCodes.Status500InternalServerError)
-                {
-                    // Log unknown error
-                    _logger.LogError("{ErrorDescription}\n{StackTrace}", ex.Message, ex.StackTrace);
-                }
-            }
-        }
-
-        private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
-        {
-            var statusCode = GetStatusCode(exception);
-            var response = new
-            {
-                success = false,
-                error = GetErrors(exception)
-            };
-            httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = statusCode;
-            await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
-        }
-
-        private static int GetStatusCode(Exception exception)
-        {
-            return exception switch
-            {
-                ValidationException => StatusCodes.Status400BadRequest,
-                _ => StatusCodes.Status500InternalServerError
-            };
-        }
-
-        private static string GetErrors(Exception exception)
-        {
-            var strBuilder = new StringBuilder();
-
-            if (exception is ValidationException validationException)
-            {
-                foreach (var failure in validationException.Errors)
-                {
-                    strBuilder.AppendLine(failure.ErrorMessage);
-                }
-            }
-            else
-            {
-                strBuilder.Append(exception.Message);
-            }
-
-            return strBuilder.ToString();
         }
     }
 
-    public static class ExceptionHandlingMiddlewareExtensions
+    private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
-        public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder)
+        var statusCode = GetStatusCode(exception);
+        var response = new
         {
-            return builder.UseMiddleware<ExceptionHandlingMiddleware>();
+            success = false,
+            error = GetErrors(exception)
+        };
+        httpContext.Response.ContentType = "application/json";
+        httpContext.Response.StatusCode = statusCode;
+        await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
+    }
+
+    private static int GetStatusCode(Exception exception)
+    {
+        return exception switch
+        {
+            ValidationException => StatusCodes.Status400BadRequest,
+            _ => StatusCodes.Status500InternalServerError
+        };
+    }
+
+    private static string GetErrors(Exception exception)
+    {
+        var strBuilder = new StringBuilder();
+
+        if (exception is ValidationException validationException)
+        {
+            foreach (var failure in validationException.Errors)
+            {
+                strBuilder.AppendLine(failure.ErrorMessage);
+            }
         }
+        else
+        {
+            strBuilder.Append(exception.Message);
+        }
+
+        return strBuilder.ToString();
+    }
+}
+
+public static class ExceptionHandlingMiddlewareExtensions
+{
+    public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<ExceptionHandlingMiddleware>();
     }
 }

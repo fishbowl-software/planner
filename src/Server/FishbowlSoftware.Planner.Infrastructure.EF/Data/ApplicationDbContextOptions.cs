@@ -1,8 +1,7 @@
-﻿namespace FishbowlSoftware.Planner.Infrastructure.Data
+﻿namespace FishbowlSoftware.Planner.Infrastructure.Data;
+
+public class ApplicationDbContextOptions
 {
-    public class ApplicationDbContextOptions
-    {
-        public string? DatabaseProvider { get; set; }
-        public string? ConnectionString { get; set; }
-    }
+    public string? DatabaseProvider { get; set; }
+    public string? ConnectionString { get; set; }
 }
