@@ -1,4 +1,5 @@
 ﻿using FishbowlSoftware.Planner.Domain.Entities;
+using FishbowlSoftware.Planner.Infrastructure.Data.EntityConfigurations;
 using FishbowlSoftware.Planner.Infrastructure.Helpers;
 using FishbowlSoftware.Planner.Infrastructure.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -67,46 +68,15 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, string>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-            
-        builder.Entity<Application>(entity =>
-        {
-            entity.ToTable("Applications");
-                
-            entity.HasOne(i => i.Client)
-                .WithOne()
-                .HasForeignKey<Application>(i => i.ClientId);
-        });
-
-        builder.Entity<Client>(entity =>
-        {
-            entity.ToTable("Clients");
-
-            entity.HasMany(i => i.Projects)
-                .WithOne(i => i.Client)
-                .HasForeignKey(i => i.ClientId);
-        });
-            
-        builder.Entity<Project>(entity =>
-        {
-            entity.ToTable("Projects");
-
-            entity.HasOne(i => i.Questionnaire)
-                .WithOne(i => i.Project)
-                .HasForeignKey<Project>(i => i.QuestionnaireId);
-
-            entity.HasMany(i => i.Applications)
-                .WithOne(i => i.Project)
-                .HasForeignKey(i => i.ProjectId);
-        });
-
-        builder.Entity<Questionnaire>(entity =>
-        {
-            entity.ToTable("Questionnaires");
-
-            entity.HasOne(i => i.Project)
-                .WithOne(i => i.Questionnaire)
-                .HasForeignKey<Questionnaire>(i => i.ProjectId);
-        });
+        builder.ApplyConfiguration(new ApplicationEntityMap());
+        builder.ApplyConfiguration(new ApplicationObjectEntityMap());
+        builder.ApplyConfiguration(new ClientEntityMap());
+        builder.ApplyConfiguration(new FlowEntityMap());
+        builder.ApplyConfiguration(new ProjectEntityMap());
+        builder.ApplyConfiguration(new QuestionEntityMap());
+        builder.ApplyConfiguration(new QuestionnaireEntityMap());
+        builder.ApplyConfiguration(new QuestionOptionEntityMap());
+        builder.ApplyConfiguration(new UserStoryEntityMap());
     }
 
     public TService? GetService<TService>()

@@ -14,4 +14,5 @@ public class Project : Entity
     public Questionnaire? Questionnaire { get; set; }
     
     public List<Application> Applications { get; set; } = [];
+    public List<Flow> Flows { get; set; } = [];
 }
