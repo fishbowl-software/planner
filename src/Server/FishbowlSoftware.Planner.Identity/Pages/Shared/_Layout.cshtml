@@ -1,29 +1,71 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
-
-    <title>Duende IdentityServer</title>
-
-    <link rel="icon" type="image/x-icon" href="~/favicon.ico"/>
-    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico"/>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - FishbowlSoftware.Planner.Identity</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/lib/bootstrap4-glyphicons/css/bootstrap-glyphicons.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/FishbowlSoftware.Planner.Identity.styles.css" asp-append-version="true"/>
 </head>
 <body>
-<partial name="_Nav"/>
-
-<div class="container body-container">
-    @RenderBody()
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">FishbowlSoftware.Planner.Identity</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                @if (User.Identity is { IsAuthenticated: true })
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <p class="navbar-text">Hello, @User.Identity.Name</p>
+                        </li>
+                        <li><a class="nav-link" asp-page="/Account/Profile" id="profile-button">Profile</a></li>
+                        <li>
+                            <form class="form-inline" asp-page="/Account/SignOut" method="post">
+                                <button type="submit" class="nav-link btn btn-link text-dark" id="logout-button">Sign Out</button>
+                            </form>
+                        </li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-page="/Account/SignIn" id="login-button">Sign In</a></li>
+                    </ul>
+                }
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-page="/Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-page="/Privacy">Privacy</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
 </div>
 
-<script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2024 - FishbowlSoftware.Planner.Identity - <a asp-page="/Privacy">Privacy</a>
+    </div>
+</footer>
 
-@RenderSection("scripts", required: false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

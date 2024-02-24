@@ -1,4 +1,4 @@
-﻿using FishbowlSoftware.Planner.Identity;
+using FishbowlSoftware.Planner.Identity;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -8,15 +8,14 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     Log.Information("Starting up");
-    var builder = WebApplication.CreateBuilder(args);
 
-    var app = builder
+    var app = WebApplication.CreateBuilder(args)
         .ConfigureServices()
         .ConfigurePipeline();
 
     app.Run();
 }
-catch (Exception ex) when (ex is not HostAbortedException)
+catch (Exception ex) when (ex.GetType().Name is not "StopTheHostException")
 {
     Log.Fatal(ex, "Unhandled exception");
 }

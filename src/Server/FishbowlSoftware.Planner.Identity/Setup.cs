@@ -1,13 +1,14 @@
-using FishbowlSoftware.Planner.Domain;
+﻿using FishbowlSoftware.Planner.Domain;
 using FishbowlSoftware.Planner.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Identity;
 using Okta.AspNetCore;
 using Serilog;
 
 namespace FishbowlSoftware.Planner.Identity;
 
-internal static class Setup
+public static class Setup
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
@@ -15,88 +16,82 @@ internal static class Setup
         builder.Services.AddInfrastructureLayer(builder.Configuration);
         builder.Services.AddRazorPages();
 
-        // builder.Services
-        //     .AddIdentityServer(options =>
-        //     {
-        //         options.Events.RaiseErrorEvents = true;
-        //         options.Events.RaiseInformationEvents = true;
-        //         options.Events.RaiseFailureEvents = true;
-        //         options.Events.RaiseSuccessEvents = true;
-        //
-        //         // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
-        //         options.EmitStaticAudienceClaim = true;
-        //     })
-        //     .AddInMemoryIdentityResources(Config.IdentityResources)
-        //     .AddInMemoryApiScopes(Config.ApiScopes)
-        //     .AddInMemoryClients(Config.Clients)
-        //     .AddAspNetIdentity<ApplicationUser>();
-
-        // builder.Services.AddAuthentication()
-        //     .AddGoogle(options =>
-        //     {
-        //         options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-        //
-        //         // register your IdentityServer with Google at https://console.developers.google.com
-        //         // enable the Google+ API
-        //         // set the redirect URI to https://localhost:5001/signin-google
-        //         options.ClientId = "copy client ID from Google here";
-        //         options.ClientSecret = "copy client secret from Google here";
-        //     });
-
-        builder.ConfigureAuthentication();
         builder.ConfigureLogger();
+        builder.ConfigureCors();
+        builder.ConfigureAuthentication();
         return builder.Build();
     }
 
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
-
-        if (app.Environment.IsDevelopment())
+        
+        if (!app.Environment.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
         }
-
+        
+        app.UseHttpsRedirection();
+        app.UseCors(app.Environment.IsDevelopment() ? "AnyCors" : "DefaultCors");
         app.UseStaticFiles();
         app.UseRouting();
-        // app.UseIdentityServer();
+
+        app.UseAuthentication();
         app.UseAuthorization();
-
-        app.MapRazorPages()
-            .RequireAuthorization();
-
+        
+        app.MapRazorPages();
         return app;
     }
-    
+
     private static void ConfigureLogger(this WebApplicationBuilder builder)
     {
         builder.Host.UseSerilog((ctx, lc) =>
             lc.ReadFrom.Configuration(ctx.Configuration));
     }
-    
+
+    private static void ConfigureCors(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("DefaultCors", cors =>
+            {
+                cors.WithOrigins(
+                        "https://{your production website}.com",
+                        "https://*.{your production website}.com")
+                    .SetIsOriginAllowedToAllowWildcardSubdomains()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+            options.AddPolicy("AnyCors", cors =>
+            {
+                cors.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+    }
+
     private static void ConfigureAuthentication(this WebApplicationBuilder builder)
     {
         var configuration = builder.Configuration;
         var services = builder.Services;
+        
+        var oktaMvcOptions = new OktaMvcOptions()
+        {
+            OktaDomain = configuration.GetValue<string>("Okta:OktaDomain"),
+            AuthorizationServerId = configuration.GetValue<string>("Okta:AuthorizationServerId"),
+            ClientId = configuration.GetValue<string>("Okta:ClientId"),
+            ClientSecret = configuration.GetValue<string>("Okta:ClientSecret"),
+            Scope = new List<string> { "openid", "profile", "email" },
+        };
 
-        services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            })
-            .AddAuthentication(options =>
+        services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
             .AddCookie()
-            .AddOktaMvc(new OktaMvcOptions
-            {
-                OktaDomain = configuration.GetValue<string>("Okta:OktaDomain"),
-                AuthorizationServerId = configuration.GetValue<string>("Okta:AuthorizationServerId"),
-                ClientId = configuration.GetValue<string>("Okta:ClientId"),
-                ClientSecret = configuration.GetValue<string>("Okta:ClientSecret"),
-                Scope = new List<string> { "openid", "profile", "email" },
-            });
+            .AddOktaMvc(oktaMvcOptions);
     }
 }

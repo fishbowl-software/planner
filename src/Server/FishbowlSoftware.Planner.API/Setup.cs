@@ -23,6 +23,7 @@ public static class Setup
 
         builder.ConfigureLogger();
         builder.ConfigureCors();
+        builder.ConfigureAuthentication();
         return builder.Build();
     }
 
@@ -39,6 +40,8 @@ public static class Setup
 
         app.UseHttpsRedirection();
         app.UseCors(app.Environment.IsDevelopment() ? "AnyCors" : "DefaultCors");
+        app.UseStaticFiles();
+        app.UseRouting();
 
         app.UseAuthentication();
         app.UseAuthorization();

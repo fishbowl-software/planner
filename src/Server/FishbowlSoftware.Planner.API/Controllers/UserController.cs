@@ -3,6 +3,7 @@ using FishbowlSoftware.Planner.Application.Queries;
 using FishbowlSoftware.Planner.Shared;
 using FishbowlSoftware.Planner.Shared.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FishbowlSoftware.Planner.API.Controllers;
@@ -27,7 +28,7 @@ public class UsersController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet]
+    [HttpGet, Authorize]
     [ProducesResponseType(typeof(PagedResult<UserDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUsersList([FromQuery] GetUsersQuery query)
