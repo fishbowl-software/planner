@@ -1,5 +1,4 @@
 @echo off
-cd ../src/Server/FishbowlSoftware.Planner.DbMigrator
 
 :prompt
 set "MigrationName="
@@ -13,14 +12,16 @@ if "%MigrationName%" == "" (
 echo Running migration for SQL Server...
 dotnet ef migrations add %MigrationName% --project ../FishbowlSoftware.Planner.Migrations.SqlServer -- --provider SqlServer
 
+
+
+
 echo Migrations completed.
 
 echo Do you want to apply migrations (y/n):
 set /p ApplyMigrationResult=
 
 if /I "%ApplyMigrationResult%" == "y" (
-	cd ../../../scripts
-	call apply-migration.bat
+	call apply-migration.cmd
 )
 
 pause

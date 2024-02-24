@@ -4,12 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FishbowlSoftware.Planner.Infrastructure.Data.EntityConfigurations;
 
-internal class ClientEntityMap : IEntityTypeConfiguration<Client>
+internal class UserEntityMap : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<Client> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("Clients");
-
         builder.HasMany(i => i.Projects)
             .WithOne(i => i.Client)
             .HasForeignKey(i => i.ClientId)

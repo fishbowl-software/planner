@@ -9,6 +9,7 @@ namespace FishbowlSoftware.Planner.DbMigrator.Data
 {
     public partial class SeedData : BackgroundService
     {
+        private readonly IHostApplicationLifetime _appLifetime;
         private readonly ILogger<SeedData> _logger;
         private readonly IConfiguration _configuration;
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -17,6 +18,7 @@ namespace FishbowlSoftware.Planner.DbMigrator.Data
         private readonly UserManager<User> _userManager;
 
         public SeedData(
+            IHostApplicationLifetime appLifetime,
             IConfiguration configuration,
             ILogger<SeedData> logger,
             IServiceScopeFactory serviceScopeFactory,
@@ -24,6 +26,7 @@ namespace FishbowlSoftware.Planner.DbMigrator.Data
             RoleManager<Role> roleManager,
             UserManager<User> userManager)
         {
+            _appLifetime = appLifetime;
             _configuration = configuration;
             _logger = logger;
             _serviceScopeFactory = serviceScopeFactory;
@@ -36,6 +39,7 @@ namespace FishbowlSoftware.Planner.DbMigrator.Data
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             await SeedDatabaseAsync(environment ?? "Development");
+            _appLifetime.StopApplication();
         }
 
         private async Task SeedDatabaseAsync(string environment = "Development")

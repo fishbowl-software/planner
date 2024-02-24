@@ -70,7 +70,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, string>
         base.OnModelCreating(builder);
         builder.ApplyConfiguration(new ApplicationEntityMap());
         builder.ApplyConfiguration(new ApplicationObjectEntityMap());
-        builder.ApplyConfiguration(new ClientEntityMap());
+        builder.ApplyConfiguration(new UserEntityMap());
         builder.ApplyConfiguration(new FlowEntityMap());
         builder.ApplyConfiguration(new ProjectEntityMap());
         builder.ApplyConfiguration(new QuestionEntityMap());
