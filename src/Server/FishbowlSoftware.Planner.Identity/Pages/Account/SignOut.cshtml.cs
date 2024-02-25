@@ -1,21 +1,26 @@
+using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Okta.AspNetCore;
 
 namespace FishbowlSoftware.Planner.Identity.Pages.Account;
 
+[Authorize]
 public class SignOutModel : PageModel
 {
-    public IActionResult OnPost()
+    public Task OnGetAsync()
     {
-        return new SignOutResult(
-            new[]
-            {
-                OktaDefaults.MvcAuthenticationScheme,
-                CookieAuthenticationDefaults.AuthenticationScheme,
-            },
-            new AuthenticationProperties { RedirectUri = "/Index" });
+        return LogoutAsync();
+    }
+    
+    private async Task LogoutAsync()
+    {
+        var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
+            .WithRedirectUri("/")
+            .Build();
+
+        await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

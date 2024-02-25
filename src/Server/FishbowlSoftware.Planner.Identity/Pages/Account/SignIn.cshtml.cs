@@ -1,18 +1,22 @@
-using Microsoft.AspNetCore.Mvc;
+using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Okta.AspNetCore;
 
 namespace FishbowlSoftware.Planner.Identity.Pages.Account;
 
 public class SignInModel : PageModel
 {
-    public IActionResult OnGet()
+    public Task OnGetAsync(string returnUrl = "/")
     {
-        if (HttpContext.User.Identity is { IsAuthenticated: false })
-        {
-            return Challenge(OktaDefaults.MvcAuthenticationScheme);
-        }
+        return LoginAsync(returnUrl);
+    }
+    
+    private async Task LoginAsync(string returnUrl = "/")
+    {
+        var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
+            .WithRedirectUri(returnUrl)
+            .Build();
 
-        return Redirect("/Index");
+        await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
     }
 }

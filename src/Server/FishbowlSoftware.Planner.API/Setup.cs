@@ -1,11 +1,13 @@
-﻿using FishbowlSoftware.Planner.API.Middlewares;
+﻿using System.Security.Claims;
+using FishbowlSoftware.Planner.API.Middlewares;
 using FishbowlSoftware.Planner.Application;
 using FishbowlSoftware.Planner.Domain;
 using FishbowlSoftware.Planner.Infrastructure;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Okta.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace FishbowlSoftware.Planner.API;
 
@@ -17,10 +19,10 @@ public static class Setup
         builder.Services.AddApplicationLayer();
         builder.Services.AddInfrastructureLayer(builder.Configuration);
 
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
+        builder.ConfigureSwagger();
         builder.ConfigureLogger();
         builder.ConfigureCors();
         builder.ConfigureAuthentication();
@@ -29,19 +31,16 @@ public static class Setup
 
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
-        // Configure the HTTP request pipeline.
         app.UseSerilogRequestLogging();
 
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(GetSwaggerUIOptions(app.Configuration));
         }
 
         app.UseHttpsRedirection();
         app.UseCors(app.Environment.IsDevelopment() ? "AnyCors" : "DefaultCors");
-        app.UseStaticFiles();
-        app.UseRouting();
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -83,25 +82,79 @@ public static class Setup
     {
         var configuration = builder.Configuration;
         var services = builder.Services;
-
-        services.ConfigureApplicationCookie(options =>
+        var domain = $"https://{configuration["Auth0:Domain"]}/";
+        
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            })
-            .AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            })
-            .AddCookie()
-            .AddOktaMvc(new OktaMvcOptions
-            {
-                OktaDomain = configuration.GetValue<string>("Okta:OktaDomain"),
-                AuthorizationServerId = configuration.GetValue<string>("Okta:AuthorizationServerId"),
-                ClientId = configuration.GetValue<string>("Okta:ClientId"),
-                ClientSecret = configuration.GetValue<string>("Okta:ClientSecret"),
-                Scope = new List<string> { "openid", "profile", "email" },
+                options.Authority = domain;
+                options.Audience = configuration["Auth0:Audience"];
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
             });
+    }
+
+    private static void ConfigureSwagger(this WebApplicationBuilder builder)
+    {
+        var configuration = builder.Configuration;
+        var services = builder.Services;
+        const string securityName = "OAuth2";
+        
+        services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition(securityName, new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OAuth2,
+                Flows = new OpenApiOAuthFlows
+                {
+                    Implicit = new OpenApiOAuthFlow
+                    {
+                        AuthorizationUrl = new Uri($"https://{configuration["Auth0:Domain"]}/authorize"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { "openid", "Open ID" }
+                        }
+                    }
+                }
+            });
+            
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = securityName
+                        },
+                        Scheme = securityName,
+                        Name = securityName,
+                        In = ParameterLocation.Header,
+                    },
+                    new List<string>()
+                }
+            };
+            
+            options.AddSecurityRequirement(securityRequirement);
+        });
+    }
+    
+    private static SwaggerUIOptions GetSwaggerUIOptions(IConfiguration configuration)
+    {
+        var options = new SwaggerUIOptions();
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Fishbowl Software API");
+        options.OAuthClientId(configuration["Auth0:SwaggerClientId"]);
+        options.OAuthClientSecret(configuration["Auth0:SwaggerClientSecret"]);
+        options.OAuthAppName("Fishbowl Software Swagger");
+        options.OAuthScopeSeparator(" ");
+        options.OAuthAdditionalQueryStringParams(new Dictionary<string, string>
+        {
+            { "audience", configuration.GetValue<string>("Auth0:Audience")! }
+        });
+        
+        return options;
     }
 }

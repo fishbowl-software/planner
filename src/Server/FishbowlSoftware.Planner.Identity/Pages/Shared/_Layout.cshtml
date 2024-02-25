@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - FishbowlSoftware.Planner.Identity</title>
+    <title>@ViewData["Title"] - FishbowlSoftware ID</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/FishbowlSoftware.Planner.Identity.styles.css" asp-append-version="true"/>
@@ -12,32 +12,13 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">FishbowlSoftware.Planner.Identity</a>
+            <a class="navbar-brand" asp-area="" asp-page="/Index">FishbowlSoftware ID</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                @if (User.Identity is { IsAuthenticated: true })
-                {
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <p class="navbar-text">Hello, @User.Identity.Name</p>
-                        </li>
-                        <li><a class="nav-link" asp-page="/Account/Profile" id="profile-button">Profile</a></li>
-                        <li>
-                            <form class="form-inline" asp-page="/Account/SignOut" method="post">
-                                <button type="submit" class="nav-link btn btn-link text-dark" id="logout-button">Sign Out</button>
-                            </form>
-                        </li>
-                    </ul>
-                }
-                else
-                {
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a asp-page="/Account/SignIn" id="login-button">Sign In</a></li>
-                    </ul>
-                }
+                <partial name="_LoginPartial" />
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-page="/Index">Home</a>
@@ -58,7 +39,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2024 - FishbowlSoftware.Planner.Identity - <a asp-page="/Privacy">Privacy</a>
+        &copy; 2024 - FishbowlSoftware - <a asp-page="/Privacy">Privacy</a>
     </div>
 </footer>
 

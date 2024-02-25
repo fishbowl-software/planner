@@ -1,9 +1,6 @@
-﻿using FishbowlSoftware.Planner.Domain;
+﻿using Auth0.AspNetCore.Authentication;
+using FishbowlSoftware.Planner.Domain;
 using FishbowlSoftware.Planner.Infrastructure;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Identity;
-using Okta.AspNetCore;
 using Serilog;
 
 namespace FishbowlSoftware.Planner.Identity;
@@ -77,21 +74,10 @@ public static class Setup
         var configuration = builder.Configuration;
         var services = builder.Services;
         
-        var oktaMvcOptions = new OktaMvcOptions()
+        services.AddAuth0WebAppAuthentication(options =>
         {
-            OktaDomain = configuration.GetValue<string>("Okta:OktaDomain"),
-            AuthorizationServerId = configuration.GetValue<string>("Okta:AuthorizationServerId"),
-            ClientId = configuration.GetValue<string>("Okta:ClientId"),
-            ClientSecret = configuration.GetValue<string>("Okta:ClientSecret"),
-            Scope = new List<string> { "openid", "profile", "email" },
-        };
-
-        services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            })
-            .AddCookie()
-            .AddOktaMvc(oktaMvcOptions);
+            options.Domain = configuration.GetValue<string>("Auth0:Domain")!;
+            options.ClientId = configuration.GetValue<string>("Auth0:ClientId")!;
+        });
     }
 }

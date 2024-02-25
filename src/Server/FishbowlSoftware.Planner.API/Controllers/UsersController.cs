@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FishbowlSoftware.Planner.API.Controllers;
 
+[Authorize]
 [Route("users")]
 [ApiController]
 public class UsersController : ControllerBase
@@ -28,7 +29,7 @@ public class UsersController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet, Authorize]
+    [HttpGet]
     [ProducesResponseType(typeof(PagedResult<UserDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUsersList([FromQuery] GetUsersQuery query)
