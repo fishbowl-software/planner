@@ -9,13 +9,13 @@ public static class SwaggerConfiguration
     {
         var configuration = builder.Configuration;
         var services = builder.Services;
-        const string securityName = "OAuth2";
+        const string oauthScheme = "OAuth2";
         
         services.AddEndpointsApiExplorer();
         
         services.AddSwaggerGen(options =>
         {
-            options.AddSecurityDefinition(securityName, new OpenApiSecurityScheme
+            options.AddSecurityDefinition(oauthScheme, new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
                 Flows = new OpenApiOAuthFlows
@@ -39,10 +39,10 @@ public static class SwaggerConfiguration
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = securityName
+                            Id = oauthScheme
                         },
-                        Scheme = securityName,
-                        Name = securityName,
+                        Scheme = oauthScheme,
+                        Name = oauthScheme,
                         In = ParameterLocation.Header,
                     },
                     new List<string>()
@@ -63,7 +63,7 @@ public static class SwaggerConfiguration
         options.OAuthScopeSeparator(" ");
         options.OAuthAdditionalQueryStringParams(new Dictionary<string, string>
         {
-            { "audience", configuration.GetValue<string>("Auth0:Audience")! }
+            { "audience", configuration["Auth0:Audience"]! }
         });
         
         return options;
