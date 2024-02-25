@@ -2,37 +2,23 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FishbowlSoftware.Planner.Infrastructure.Builder
+namespace FishbowlSoftware.Planner.Infrastructure.Builder;
+
+internal class InfrastructureBuilder : ServiceCollection, IInfrastructureBuilder
 {
-    internal class InfrastructureBuilder : ServiceCollection, IInfrastructureBuilder
+    public IInfrastructureBuilder ConfigureDatabase(Action<ApplicationDbContextOptions> configure)
     {
-        private readonly IdentityBuilder _identityBuilder;
+        var options = new ApplicationDbContextOptions();
+        configure(options);
 
-        internal InfrastructureBuilder(IdentityBuilder identityBuilder)
+        var serviceDesc = new ServiceDescriptor(typeof(ApplicationDbContextOptions), options);
+
+        if (Contains(serviceDesc))
         {
-            _identityBuilder = identityBuilder;
+            Remove(serviceDesc);
         }
 
-        public IInfrastructureBuilder ConfigureIdentity(Action<IdentityBuilder> configure)
-        {
-            configure(_identityBuilder);
-            return this;
-        }
-
-        public IInfrastructureBuilder ConfigureDatabase(Action<ApplicationDbContextOptions> configure)
-        {
-            var options = new ApplicationDbContextOptions();
-            configure(options);
-
-            var serviceDesc = new ServiceDescriptor(typeof(ApplicationDbContextOptions), options);
-
-            if (Contains(serviceDesc))
-            {
-                Remove(serviceDesc);
-            }
-
-            this.AddSingleton(options);
-            return this;
-        }
+        this.AddSingleton(options);
+        return this;
     }
 }

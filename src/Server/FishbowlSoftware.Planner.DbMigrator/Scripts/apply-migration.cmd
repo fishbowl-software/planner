@@ -1,5 +1,6 @@
 @echo off
 
+cd ../
 echo Applying migrations...
 dotnet run
 

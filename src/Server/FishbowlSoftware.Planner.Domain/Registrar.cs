@@ -8,7 +8,7 @@ namespace FishbowlSoftware.Planner.Domain
         public static IServiceCollection AddDomainLayer(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Registrar).Assembly));
-            services.AddScoped<AuthorizedUserContext>();
+            services.AddScoped<AuthenticatedUserData>();
             return services;
         }
     }

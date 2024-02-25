@@ -13,7 +13,7 @@ namespace FishbowlSoftware.Planner.Application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Registrar).Assembly));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SetUserContextBehaviour<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SetUserDataBehaviour<,>));
             return services;
         }
     }

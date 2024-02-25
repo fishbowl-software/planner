@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd ../
 echo "Enter Migration Name: "
 read -r MigrationName
 
@@ -12,9 +13,6 @@ fi
 echo "Running migration for SQL Server..."
 dotnet ef migrations add "$MigrationName" --project ../FishbowlSoftware.Planner.Migrations.SqlServer -- --provider SqlServer
 
-
-
-
 echo "Migrations completed."
 
 echo "Do you want to apply migrations (y/n): "
@@ -22,5 +20,6 @@ read -r ApplyMigrationResult
 
 if [ "$ApplyMigrationResult" = "y" ]
 then
+    cd ./Scripts || exit
     ./apply-migration.sh
 fi

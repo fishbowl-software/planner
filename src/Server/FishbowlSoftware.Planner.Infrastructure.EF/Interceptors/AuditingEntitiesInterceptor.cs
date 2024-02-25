@@ -10,16 +10,16 @@ namespace FishbowlSoftware.Planner.Infrastructure.Interceptors
 {
     public class AuditingEntitiesInterceptor : SaveChangesInterceptor
     {
-        private readonly AuthorizedUserContext? _authorizedUserIdentity;
+        private readonly AuthenticatedUserData? _authenticatedUserData;
 
         static AuditingEntitiesInterceptor()
         {
             RegisterBulkOperationEvents();
         }
 
-        public AuditingEntitiesInterceptor(AuthorizedUserContext? authorizedUserIdentity = null)
+        public AuditingEntitiesInterceptor(AuthenticatedUserData? authenticatedUserData = null)
         {
-            _authorizedUserIdentity = authorizedUserIdentity;
+            _authenticatedUserData = authenticatedUserData;
         }
 
         public override InterceptionResult<int> SavingChanges(
@@ -46,7 +46,7 @@ namespace FishbowlSoftware.Planner.Infrastructure.Interceptors
                 return;
             }
 
-            var userId = _authorizedUserIdentity?.UserId;
+            var userId = _authenticatedUserData?.UserId;
             foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
             {
                 if (entry.State is EntityState.Added)
@@ -78,7 +78,7 @@ namespace FishbowlSoftware.Planner.Infrastructure.Interceptors
                 if (obj is IEnumerable<AuditableEntity> auditableEntities &&
                     context is ApplicationDbContext applicationDbContext)
                 {
-                    var userId = applicationDbContext.GetService<AuthorizedUserContext>()?.UserId;
+                    var userId = applicationDbContext.GetService<AuthenticatedUserData>()?.UserId;
                     foreach (var auditableEntity in auditableEntities)
                     {
                         auditableEntity.CreatedBy = userId;
