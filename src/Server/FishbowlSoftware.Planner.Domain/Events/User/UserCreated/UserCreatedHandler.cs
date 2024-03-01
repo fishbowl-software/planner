@@ -14,7 +14,7 @@ internal class UserCreatedHandler : IDomainEventHandler<UserCreatedEvent>
 
     public Task Handle(UserCreatedEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Client created with id {Client} and email {Email}", notification.UserId, notification.Email);
+        _logger.LogInformation("User created with id {User} and email {Email}", notification.UserId, notification.Email);
         return Task.CompletedTask;
     }
 }

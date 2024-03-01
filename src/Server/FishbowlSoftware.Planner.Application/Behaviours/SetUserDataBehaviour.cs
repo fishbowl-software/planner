@@ -31,8 +31,8 @@ internal sealed class SetUserDataBehaviour<TRequest, TResponse> : IPipelineBehav
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var userExists = await _uow.Repository<Client>()
-            .AnyAsync(i => i.Id == request.UserId || i.Email == request.UserId || i.AccountId == request.UserId);
+        var userExists = await _uow.Repository<User>()
+            .AnyAsync(i => i.Id == request.UserId || i.Email == request.UserId);
 
         if (!userExists)
         {

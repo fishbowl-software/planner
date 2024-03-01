@@ -14,16 +14,16 @@ namespace FishbowlSoftware.Planner.Infrastructure.Data;
 /// with the provider name. Supported providers are <c>'SqlServer'</c>, <c>'PostgreSql'</c>, <c>'MySql'</c>, <c>'Sqlite'</c>.
 /// 
 /// Example for SQL Server:
-/// <code>dotnet ef migrations add Version_0001 --project ../ProjectName.Migrations.SqlServer -- --provider SqlServer</code>
+/// <code>dotnet ef migrations add Version_0001 --project ../FishbowlSoftware.Planner.Migrations.SqlServer -- --provider SqlServer</code>
 /// 
 /// Example for SQLite:
-/// <code>dotnet ef migrations add Version_0001 --project ../ProjectName.Migrations.Sqlite -- --provider Sqlite</code>
+/// <code>dotnet ef migrations add Version_0001 --project ../FishbowlSoftware.Planner.Migrations.Sqlite -- --provider Sqlite</code>
 ///
 /// /// Example for PostgreSQL:
-/// <code>dotnet ef migrations add Version_0001 --project ../ProjectName.Migrations.PostgreSql -- --provider PostgreSql</code>
+/// <code>dotnet ef migrations add Version_0001 --project ../FishbowlSoftware.Planner.Migrations.PostgreSql -- --provider PostgreSql</code>
 ///
 /// /// Example for MySQL:
-/// <code>dotnet ef migrations add Version_0001 --project ../ProjectName.Migrations.MySql -- --provider MySql</code>
+/// <code>dotnet ef migrations add Version_0001 --project ../FishbowlSoftware.Planner.Migrations.MySql -- --provider MySql</code>
 /// 
 /// The class parses the command-line arguments to determine the provider and sets up
 /// the corresponding database connection string and provider-specific options.

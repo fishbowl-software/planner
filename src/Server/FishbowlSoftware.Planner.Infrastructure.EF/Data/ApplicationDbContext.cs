@@ -1,11 +1,13 @@
-﻿using FishbowlSoftware.Planner.Infrastructure.Data.EntityConfigurations;
+﻿using FishbowlSoftware.Planner.Domain.Entities;
+using FishbowlSoftware.Planner.Infrastructure.Data.EntityConfigurations;
 using FishbowlSoftware.Planner.Infrastructure.Helpers;
 using FishbowlSoftware.Planner.Infrastructure.Interceptors;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FishbowlSoftware.Planner.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User, Role, string>
 {
     private readonly ApplicationDbContextOptions _dbContextOptions;
     private readonly AuditingEntitiesInterceptor? _auditingEntitiesInterceptor;
@@ -68,7 +70,7 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(builder);
         builder.ApplyConfiguration(new ApplicationEntityMap());
         builder.ApplyConfiguration(new ApplicationObjectEntityMap());
-        builder.ApplyConfiguration(new ClientEntityMap());
+        builder.ApplyConfiguration(new UserEntityMap());
         builder.ApplyConfiguration(new FlowEntityMap());
         builder.ApplyConfiguration(new ProjectEntityMap());
         builder.ApplyConfiguration(new QuestionEntityMap());

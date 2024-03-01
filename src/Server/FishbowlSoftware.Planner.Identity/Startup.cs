@@ -1,18 +1,28 @@
-﻿using FishbowlSoftware.Planner.Domain;
+using FishbowlSoftware.Planner.Domain;
 using FishbowlSoftware.Planner.Identity.StartupConfigurations;
 using FishbowlSoftware.Planner.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 
 namespace FishbowlSoftware.Planner.Identity;
 
-public static class Startup
+internal static class Startup
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddDomainLayer();
-        builder.Services.AddInfrastructureLayer(builder.Configuration);
+        builder.Services.AddInfrastructureLayer(builder.Configuration)
+            .ConfigureIdentity(identityBuilder =>
+            {
+                identityBuilder
+                    .AddSignInManager()
+                    // .AddClaimsPrincipalFactory<UserCustomClaimsFactory>()
+                    .AddDefaultTokenProviders();
+            });
+        
         builder.Services.AddRazorPages();
 
+        
         builder.ConfigureAuthentication();
         builder.ConfigureCors();
         builder.ConfigureLogger();
@@ -22,22 +32,22 @@ public static class Startup
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
-        
-        if (!app.Environment.IsDevelopment())
+
+        if (app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
-            app.UseHsts();
+            app.UseDeveloperExceptionPage();
         }
-        
-        app.UseHttpsRedirection();
-        app.UseCors(app.Environment.IsDevelopment() ? "AnyCors" : "DefaultCors");
+
         app.UseStaticFiles();
         app.UseRouting();
-
-        app.UseAuthentication();
-        app.UseAuthorization();
+        app.UseCors(app.Environment.IsDevelopment() ? "AnyCors" : "DefaultCors");
         
-        app.MapRazorPages();
+        app.UseIdentityServer();
+        app.UseAuthorization();
+
+        app.MapRazorPages()
+            .RequireAuthorization();
+
         return app;
     }
 }

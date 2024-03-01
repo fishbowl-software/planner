@@ -7,7 +7,7 @@ using FishbowlSoftware.Planner.Shared.Models;
 
 namespace FishbowlSoftware.Planner.Application.Queries;
 
-internal class GetClientHandler : RequestHandler<GetClientQuery, Result<ClientDto>>
+internal class GetClientHandler : RequestHandler<GetClientQuery, Result<UserDto>>
 {
     private readonly IUnitOfWork _uow;
 
@@ -16,18 +16,18 @@ internal class GetClientHandler : RequestHandler<GetClientQuery, Result<ClientDt
         _uow = uow;
     }
 
-    protected override async Task<Result<ClientDto>> HandleValidated(
+    protected override async Task<Result<UserDto>> HandleValidated(
         GetClientQuery req, CancellationToken ct)
     {
-        var clientEntity = await _uow.Repository<Client>()
-            .GetAsync(i => i.Id == req.Id || i.AccountId == req.Id || i.Email == req.Id);
+        var userEntity = await _uow.Repository<User>()
+            .GetAsync(i => i.Id == req.Id || i.Email == req.Id);
 
-        if (clientEntity is null)
+        if (userEntity is null)
         {
-            return Result<ClientDto>.CreateError($"Could not find a client with ID {req.Id}");
+            return Result<UserDto>.CreateError($"Could not find a client with ID {req.Id}");
         }
 
-        var clientDto = clientEntity.ToDto();
-        return Result<ClientDto>.CreateSuccess(clientDto);
+        var userDto = userEntity.ToDto();
+        return Result<UserDto>.CreateSuccess(userDto);
     }
 }

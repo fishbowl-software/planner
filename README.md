@@ -10,5 +10,8 @@
 3. **Run the API Application:**
 - Execute the [run-api](./scripts/run-api.cmd) CMD script file to start the ASP.NET Core Web API application.
 
-4. **Run the Client Application:**
+4. **Run the Identity Server Application:**
+- Execute the [run-identity](./scripts/run-api.cmd) CMD script file to start the ASP.NET Core Identity Server application.
+
+5. **Run the Client Application:**
 - Execute the [run-client](./scripts/run-client.cmd) CMD script file to start the Angular client application.

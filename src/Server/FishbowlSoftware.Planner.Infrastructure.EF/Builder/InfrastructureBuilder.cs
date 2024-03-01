@@ -6,6 +6,19 @@ namespace FishbowlSoftware.Planner.Infrastructure.Builder;
 
 internal class InfrastructureBuilder : ServiceCollection, IInfrastructureBuilder
 {
+    private readonly IdentityBuilder _identityBuilder;
+
+    internal InfrastructureBuilder(IdentityBuilder identityBuilder)
+    {
+        _identityBuilder = identityBuilder;
+    }
+
+    public IInfrastructureBuilder ConfigureIdentity(Action<IdentityBuilder> configure)
+    {
+        configure(_identityBuilder);
+        return this;
+    }
+
     public IInfrastructureBuilder ConfigureDatabase(Action<ApplicationDbContextOptions> configure)
     {
         var options = new ApplicationDbContextOptions();
