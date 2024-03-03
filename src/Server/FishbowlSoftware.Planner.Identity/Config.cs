@@ -9,6 +9,7 @@ public static class Config
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResources.Email()
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -43,13 +44,12 @@ public static class Config
             {
                 ClientId = "planner.spa",
                 ClientName = "Planner SPA App",
-                // ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
+                RequireClientSecret = false,
                 AllowedGrantTypes = GrantTypes.Code, // interactive client using code flow + pkce
-                RedirectUris = { "https://localhost:7002/signin-oidc" },
-                FrontChannelLogoutUri = "https://localhost:7002/signout-oidc",
-                PostLogoutRedirectUris = { "https://localhost:7002/signout-callback-oidc" },
+                RedirectUris = { "http://localhost:7002" },
+                PostLogoutRedirectUris = { "http://localhost:7002" },
                 AllowOfflineAccess = true,
-                AllowedScopes = { "openid", "profile", "planner.read", "planner.write" }
+                AllowedScopes = { "openid", "profile", "email", "planner.read", "planner.write" }
             },
         };
 }
