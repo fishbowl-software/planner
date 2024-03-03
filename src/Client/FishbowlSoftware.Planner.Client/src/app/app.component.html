@@ -1,10 +1,10 @@
-<h2>User</h2>
-<p>{{ userName }}</p>
+<div class="d-flex vh-100">
+  <app-sidebar></app-sidebar>
 
-<h2>Id-Token</h2>
-<p>{{ idToken }}</p>
-
-<h2>Access Token</h2>
-<p>{{ accessToken }}</p>
-<p class="p-5 text-lg text-center text-success">Test</p>
-<p-button label="Test Button"></p-button>
+  <div class="vw-100">
+    <app-breadcrumb></app-breadcrumb>
+    <div class="container mt-4">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

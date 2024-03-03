@@ -3,13 +3,13 @@ import {RouterOutlet} from '@angular/router';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {filter} from 'rxjs';
 import {AUTH_CONFIG} from '@configs';
-import {ButtonModule} from 'primeng/button';
+import {BreadcrumbComponent, SidebarComponent} from '@layout';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
-  imports: [ButtonModule, RouterOutlet],
+  imports: [BreadcrumbComponent, SidebarComponent, RouterOutlet],
 })
 export class AppComponent {
   constructor(private readonly oauthService: OAuthService) {
