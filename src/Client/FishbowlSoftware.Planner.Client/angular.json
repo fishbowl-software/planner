@@ -29,7 +29,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles/app.scss"
+              "src/styles/imports.scss"
             ],
             "scripts": []
           },
@@ -91,7 +91,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles/app.scss"
+              "src/styles/imports.scss"
             ],
             "scripts": []
           }
