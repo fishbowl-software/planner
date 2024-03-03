@@ -8,9 +8,5 @@ internal class UserEntityMap : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasMany(i => i.Projects)
-            .WithOne(i => i.Client)
-            .HasForeignKey(i => i.ClientId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

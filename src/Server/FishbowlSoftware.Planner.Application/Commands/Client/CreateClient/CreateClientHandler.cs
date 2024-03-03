@@ -17,15 +17,16 @@ internal class CreateClientHandler : RequestHandler<CreateClientCommand, Result>
     protected override async Task<Result> HandleValidated(
         CreateClientCommand req, CancellationToken ct)
     {
-        var newClient = User.Create(
-            req.FirstName!,
-            req.LastName!,
-            req.Email!,
-            req.PhoneNumber,
-            req.Organization!);
-
-
-        await _uow.Repository<User>().AddAsync(newClient);
+        User? user = null;
+        
+        if (!string.IsNullOrEmpty(req.UserId))
+        {
+            user = await _uow.Repository<User>().GetAsync(i => i.Id == req.UserId);
+        }
+        
+        var newClient = Client.Create(req.Name!, user);
+        
+        await _uow.Repository<Client>().AddAsync(newClient);
         await _uow.SaveChangesAsync(ct);
         return Result.CreateSuccess();
     }

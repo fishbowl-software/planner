@@ -13,8 +13,6 @@ public class User : IdentityUser, IEntity<string>, IDomainEventHolder
     public string? Organization { get; set; }
     public Address Address { get; set; } = new();
     
-    public List<Project> Projects { get; set; } = [];
-    
     [NotMapped, JsonIgnore]
     public List<IDomainEvent> DomainEvents { get; } = [];
 

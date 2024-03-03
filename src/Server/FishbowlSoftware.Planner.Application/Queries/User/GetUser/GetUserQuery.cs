@@ -4,6 +4,7 @@ using MediatR;
 
 namespace FishbowlSoftware.Planner.Application.Queries;
 
-public class GetClientsQuery : PagedQuery, IRequest<PagedResult<ClientDto>>
+public class GetUserQuery : IRequest<Result<UserDto>>
 {
+    public required string Id { get; set; }
 }

@@ -7,7 +7,7 @@ using FishbowlSoftware.Planner.Shared.Models;
 
 namespace FishbowlSoftware.Planner.Application.Queries;
 
-internal class GetClientHandler : RequestHandler<GetClientQuery, Result<UserDto>>
+internal class GetClientHandler : RequestHandler<GetClientQuery, Result<ClientDto>>
 {
     private readonly IUnitOfWork _uow;
 
@@ -16,18 +16,17 @@ internal class GetClientHandler : RequestHandler<GetClientQuery, Result<UserDto>
         _uow = uow;
     }
 
-    protected override async Task<Result<UserDto>> HandleValidated(
+    protected override async Task<Result<ClientDto>> HandleValidated(
         GetClientQuery req, CancellationToken ct)
     {
-        var userEntity = await _uow.Repository<User>()
-            .GetAsync(i => i.Id == req.Id || i.Email == req.Id);
+        var clientEntity = await _uow.Repository<Client>().GetAsync(i => i.Id == req.Id);
 
-        if (userEntity is null)
+        if (clientEntity is null)
         {
-            return Result<UserDto>.CreateError($"Could not find a client with ID {req.Id}");
+            return Result<ClientDto>.CreateError($"Could not find a client with ID {req.Id}");
         }
 
-        var userDto = userEntity.ToDto();
-        return Result<UserDto>.CreateSuccess(userDto);
+        var clientDto = clientEntity.ToDto();
+        return Result<ClientDto>.CreateSuccess(clientDto);
     }
 }

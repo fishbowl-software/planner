@@ -8,7 +8,7 @@ using FishbowlSoftware.Planner.Shared.Models;
 
 namespace FishbowlSoftware.Planner.Application.Queries;
 
-internal class GetClientsHandler : RequestHandler<GetClientsQuery, PagedResult<UserDto>>
+internal class GetClientsHandler : RequestHandler<GetClientsQuery, PagedResult<ClientDto>>
 {
     private readonly IUnitOfWork _uow;
 
@@ -17,16 +17,16 @@ internal class GetClientsHandler : RequestHandler<GetClientsQuery, PagedResult<U
         _uow = uow;
     }
 
-    protected override async Task<PagedResult<UserDto>> HandleValidated(
+    protected override async Task<PagedResult<ClientDto>> HandleValidated(
         GetClientsQuery req, CancellationToken ct)
     {
-        var totalItems = await _uow.Repository<User>().CountAsync();
+        var totalItems = await _uow.Repository<Client>().CountAsync();
 
-        var users = _uow.Repository<User>()
+        var clients = _uow.Repository<Client>()
             .ApplySpecification(new GetClientsPaged(req.OrderBy, req.Page, req.PageSize))
             .Select(i => i.ToDto())
             .ToArray();
 
-        return PagedResult<UserDto>.CreateSuccess(users, totalItems, req.PageSize);
+        return PagedResult<ClientDto>.CreateSuccess(clients, totalItems, req.PageSize);
     }
 }

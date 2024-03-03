@@ -17,15 +17,15 @@ internal class DeleteUserHandler : RequestHandler<DeleteClientCommand, Result>
     protected override async Task<Result> HandleValidated(
         DeleteClientCommand req, CancellationToken ct)
     {
-        var user = await _uow.Repository<User>()
+        var user = await _uow.Repository<Client>()
             .GetAsync(i => i.Id == req.Id);
 
         if (user is null)
         {
-            return Result.CreateError($"Could not find a user with ID {req.Id}");
+            return Result.CreateError($"Could not find a client with ID {req.Id}");
         }
 
-        _uow.Repository<User>().Delete(user);
+        _uow.Repository<Client>().Delete(user);
         await _uow.SaveChangesAsync(ct);
         return Result.CreateSuccess();
     }

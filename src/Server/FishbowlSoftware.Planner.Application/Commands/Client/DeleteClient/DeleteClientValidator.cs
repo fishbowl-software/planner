@@ -6,7 +6,6 @@ internal class DeleteUserValidator : AbstractValidator<DeleteClientCommand>
 {
     public DeleteUserValidator()
     {
-        RuleFor(i => i.Id)
-            .NotEmpty();
+        RuleFor(i => i.Id).NotEmpty();
     }
 }

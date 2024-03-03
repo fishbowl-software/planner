@@ -8,7 +8,7 @@ public class Project : Entity
     public string? Description { get; set; }
     
     public string? ClientId { get; set; }
-    public User? Client { get; set; }
+    public Client? Client { get; set; }
     
     public string? QuestionnaireId { get; set; }
     public Questionnaire? Questionnaire { get; set; }

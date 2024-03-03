@@ -2,9 +2,9 @@
 
 namespace FishbowlSoftware.Planner.Application.Queries;
 
-internal class GetClientsValidator : AbstractValidator<GetClientsQuery>
+internal class GetUsersValidator : AbstractValidator<GetClientsQuery>
 {
-    public GetClientsValidator()
+    public GetUsersValidator()
     {
         RuleFor(i => i.Page).GreaterThanOrEqualTo(0);
         RuleFor(i => i.PageSize).GreaterThanOrEqualTo(1);

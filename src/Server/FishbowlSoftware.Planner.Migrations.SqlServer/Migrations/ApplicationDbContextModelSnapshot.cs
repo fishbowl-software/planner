@@ -75,6 +75,26 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.ToTable("ApplicationObjects", (string)null);
                 });
 
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Client", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Clients", (string)null);
+                });
+
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Flow", b =>
                 {
                     b.Property<string>("Id")
@@ -426,7 +446,7 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
 
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Application", b =>
                 {
-                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.User", "Client")
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Client", "Client")
                         .WithOne()
                         .HasForeignKey("FishbowlSoftware.Planner.Domain.Entities.Application", "ClientId");
 
@@ -450,6 +470,16 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.Navigation("UserStory");
                 });
 
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Client", b =>
+                {
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.User", "User")
+                        .WithOne()
+                        .HasForeignKey("FishbowlSoftware.Planner.Domain.Entities.Client", "UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Flow", b =>
                 {
                     b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Project", "Project")
@@ -461,7 +491,7 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
 
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Project", b =>
                 {
-                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.User", "Client")
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Client", "Client")
                         .WithMany("Projects")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -558,6 +588,11 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Client", b =>
+                {
+                    b.Navigation("Projects");
+                });
+
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Flow", b =>
                 {
                     b.Navigation("UserStories");
@@ -580,11 +615,6 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Questionnaire", b =>
                 {
                     b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.UserStory", b =>

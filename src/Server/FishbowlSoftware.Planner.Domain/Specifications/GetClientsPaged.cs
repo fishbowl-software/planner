@@ -4,7 +4,7 @@ using FishbowlSoftware.Planner.Domain.Entities;
 
 namespace FishbowlSoftware.Planner.Domain.Specifications;
 
-public class GetClientsPaged : BaseSpecification<User>
+public class GetClientsPaged : BaseSpecification<Client>
 {
     public GetClientsPaged(
         string? orderBy,
@@ -15,16 +15,12 @@ public class GetClientsPaged : BaseSpecification<User>
         ApplyPaging(page, pageSize);
     }
 
-    protected override Expression<Func<User, object?>> CreateOrderByExpression(string propertyName)
+    protected override Expression<Func<Client, object?>> CreateOrderByExpression(string propertyName)
     {
         return propertyName switch
         {
-            "phonenumber" => i => i.PhoneNumber,
-            "organization" => i => i.Organization,
-            "address" => i => i.Address.Line1,
-            "firstname" => i => i.FirstName,
-            "lastname" => i => i.LastName,
-            _ => i => i.Email
+            "name" => i => i.Name,
+            _ => i => i.Name
         };
     }
 }

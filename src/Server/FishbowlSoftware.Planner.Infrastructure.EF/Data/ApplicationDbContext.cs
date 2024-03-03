@@ -77,6 +77,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, string>
         builder.ApplyConfiguration(new QuestionnaireEntityMap());
         builder.ApplyConfiguration(new QuestionOptionEntityMap());
         builder.ApplyConfiguration(new UserStoryEntityMap());
+        builder.ApplyConfiguration(new ClientEntityMap());
     }
 
     public TService? GetService<TService>()
