@@ -9,23 +9,46 @@ public static class SwaggerConfiguration
     {
         var configuration = builder.Configuration;
         var services = builder.Services;
-        const string oauthScheme = "OAuth2";
+        const string authName = "Client Credentials";
+        var authProvider = configuration["Authentication:Provider"];
         
         services.AddEndpointsApiExplorer();
+
+        if (string.IsNullOrEmpty(authProvider))
+        {
+            services.AddSwaggerGen();
+            return;
+        }
+        
+        var authorizationUrl = authProvider switch
+        {
+            "IdentityServer" => $"{configuration["Authentication:IdentityServer:Authority"]}/connect/authorize",
+            "Auth0" => $"https://{configuration["Authentication:Auth0:Domain"]}/authorize",
+            _ => throw new InvalidOperationException($"Invalid authentication provider, The provider '{authProvider}' is not supported.")
+        };
+        
+        var tokenUrl = authProvider switch
+        {
+            "IdentityServer" => $"{configuration["Authentication:IdentityServer:Authority"]}/connect/token",
+            "Auth0" => $"https://{configuration["Authentication:Auth0:Domain"]}/oauth/token",
+            _ => throw new InvalidOperationException($"Invalid authentication provider, The provider '{authProvider}' is not supported.")
+        };
         
         services.AddSwaggerGen(options =>
         {
-            options.AddSecurityDefinition(oauthScheme, new OpenApiSecurityScheme
+            options.AddSecurityDefinition(authName, new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
                 Flows = new OpenApiOAuthFlows
                 {
-                    Implicit = new OpenApiOAuthFlow
+                    ClientCredentials = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri($"https://{configuration["Auth0:Domain"]}/authorize"),
+                        AuthorizationUrl = new Uri(authorizationUrl),
+                        TokenUrl = new Uri(tokenUrl),
                         Scopes = new Dictionary<string, string>
                         {
-                            { "openid", "Open ID" }
+                            { "planner.read", "Planner API Read" },
+                            { "planner.write", "Planner API Write" }
                         }
                     }
                 }
@@ -39,10 +62,9 @@ public static class SwaggerConfiguration
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = oauthScheme
+                            Id = authName
                         },
-                        Scheme = oauthScheme,
-                        Name = oauthScheme,
+                        Name = authName,
                         In = ParameterLocation.Header,
                     },
                     new List<string>()
@@ -57,13 +79,20 @@ public static class SwaggerConfiguration
     {
         var options = new SwaggerUIOptions();
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "Fishbowl Software API");
-        options.OAuthClientId(configuration["Auth0:SwaggerClientId"]);
-        options.OAuthClientSecret(configuration["Auth0:SwaggerClientSecret"]);
-        options.OAuthAppName("Fishbowl Software Swagger");
-        options.OAuthScopeSeparator(" ");
+        
+        var authProvider = configuration["Authentication:Provider"];
+        
+        if (string.IsNullOrEmpty(authProvider))
+        {
+            return options;
+        }
+        
+        options.OAuthClientId(configuration[$"Authentication:{authProvider}:SwaggerClientId"]);
+        options.OAuthClientSecret(configuration[$"Authentication:{authProvider}:SwaggerClientSecret"]);
+        options.OAuthAppName("Swagger Client");
         options.OAuthAdditionalQueryStringParams(new Dictionary<string, string>
         {
-            { "audience", configuration["Auth0:Audience"]! }
+            { "audience", configuration[$"Authentication:{authProvider}:Audience"]! }
         });
         
         return options;

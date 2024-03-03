@@ -21,7 +21,6 @@ internal static class Startup
             });
         
         builder.Services.AddRazorPages();
-
         
         builder.ConfigureAuthentication();
         builder.ConfigureCors();

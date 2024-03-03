@@ -10,9 +10,7 @@ public class User : IdentityUser, IEntity<string>, IDomainEventHolder
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
-    public string? Email { get; set; }
     public string? Organization { get; set; }
-    public string? PhoneNumber { get; set; }
     public Address Address { get; set; } = new();
     
     public List<Project> Projects { get; set; } = [];
