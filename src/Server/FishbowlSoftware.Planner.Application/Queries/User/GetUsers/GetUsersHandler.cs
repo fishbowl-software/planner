@@ -23,7 +23,7 @@ internal class GetUsersHandler : RequestHandler<GetUsersQuery, PagedResult<UserD
         var totalItems = await _uow.Repository<User>().CountAsync();
 
         var users = _uow.Repository<User>()
-            .ApplySpecification(new GetUsersPaged(req.OrderBy, req.Page, req.PageSize))
+            .ApplySpecification(new GetUsersPaged(req.Search, req.OrderBy, req.Page, req.PageSize))
             .Select(i => i.ToDto())
             .ToArray();
 

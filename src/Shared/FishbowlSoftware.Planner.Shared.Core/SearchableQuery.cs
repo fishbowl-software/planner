@@ -1,29 +1,28 @@
-﻿namespace FishbowlSoftware.Planner.Shared
+﻿namespace FishbowlSoftware.Planner.Shared;
+
+public class SearchableQuery : PagedQuery
 {
-    public class SearchableQuery : PagedQuery
+    public SearchableQuery(
+        string? search = null,
+        string? orderBy = null,
+        int page = 1,
+        int pageSize = 10)
+        : base(orderBy, page, pageSize)
     {
-        public SearchableQuery(
-            string? search = null,
-            string? orderBy = null,
-            int page = 1,
-            int pageSize = 10)
-            : base(orderBy, page, pageSize)
+        Search = search;
+    }
+
+    public string? Search { get; init; }
+
+    public override IDictionary<string, string> ToDictionary()
+    {
+        var queryDict = base.ToDictionary();
+
+        if (!string.IsNullOrEmpty(Search))
         {
-            Search = search;
+            queryDict.Add("search", Search);
         }
 
-        public string? Search { get; init; }
-
-        public override IDictionary<string, string> ToDictionary()
-        {
-            var queryDict = base.ToDictionary();
-
-            if (!string.IsNullOrEmpty(Search))
-            {
-                queryDict.Add("search", Search);
-            }
-
-            return queryDict;
-        }
+        return queryDict;
     }
 }

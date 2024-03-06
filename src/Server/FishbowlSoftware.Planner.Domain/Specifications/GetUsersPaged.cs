@@ -7,10 +7,19 @@ namespace FishbowlSoftware.Planner.Domain.Specifications;
 public class GetUsersPaged : BaseSpecification<User>
 {
     public GetUsersPaged(
+        string? searchQuery,
         string? orderBy,
         int page,
         int pageSize)
     {
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            Criteria = i =>
+                (i.FirstName != null && i.FirstName.Contains(searchQuery)) ||
+                (i.LastName != null && i.LastName.Contains(searchQuery)) ||
+                (i.Email != null && i.Email.Contains(searchQuery));
+        }
+        
         ApplyOrderBy(orderBy);
         ApplyPaging(page, pageSize);
     }

@@ -15,8 +15,7 @@ public static class Startup
         builder.Services.AddApplicationLayer();
         builder.Services.AddInfrastructureLayer(builder.Configuration);
 
-        builder.Services.AddControllers();
-
+        builder.ConfigureControllers();
         builder.ConfigureAuthentication();
         builder.ConfigureCors();
         builder.ConfigureLogger();

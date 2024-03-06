@@ -1,9 +1,15 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable, catchError, of} from 'rxjs';
-import {MessageService} from 'primeng/api';
 import {APP_CONFIG} from '@configs';
-import {SearchableQuery} from '@core/models';
+import {ToastService} from '@core/services';
+import {
+  SearchableQuery,
+  PagedResult,
+  UserDto,
+  ClientDto,
+  CreateClientCommand,
+} from '@core/models';
 
 @Injectable({providedIn: 'root'})
 export class ApiService {
@@ -12,9 +18,37 @@ export class ApiService {
 
   constructor(
     private readonly httpClient: HttpClient,
-    private readonly messageService: MessageService)
+    private readonly toastService: ToastService
+  )
   {
   }
+
+  //#region Users API
+
+  getUsers(query?: SearchableQuery): Observable<PagedResult<UserDto>> {
+    const url = `/users?${this.stringfySearchableQuery(query)}`;
+    return this.get(url);
+  }
+
+  //#endregion
+
+
+  //#region Clients API
+
+  getClients(query?: SearchableQuery): Observable<PagedResult<ClientDto>> {
+    const url = `/clients?${this.stringfySearchableQuery(query)}`;
+    return this.get(url);
+  }
+
+  createClient(command: CreateClientCommand): Observable<PagedResult<ClientDto>> {
+    const url = `/clients`;
+    return this.post(url, command);
+  }
+
+  //#endregion
+
+
+  //#region Internal methods
 
   private get<TResponse>(endpoint: string): Observable<TResponse> {
     return this.httpClient
@@ -56,9 +90,10 @@ export class ApiService {
   private handleError(responseData: any): Observable<any> {
     const errorMessage = responseData.error?.error ?? responseData.error;
 
-    this.messageService.add({key: 'notification', severity: 'error', summary: 'Error', detail: errorMessage});
-    // this.messageService.add({key: 'errorMsg', severity: 'error', summary: 'Error', detail: errorMessage});
+    this.toastService.showError(errorMessage);
     console.error(errorMessage ?? responseData);
     return of({error: errorMessage, success: false});
   }
+
+  //#endregion
 }

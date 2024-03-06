@@ -23,7 +23,7 @@ internal class GetClientsHandler : RequestHandler<GetClientsQuery, PagedResult<C
         var totalItems = await _uow.Repository<Client>().CountAsync();
 
         var clients = _uow.Repository<Client>()
-            .ApplySpecification(new GetClientsPaged(req.OrderBy, req.Page, req.PageSize))
+            .ApplySpecification(new GetClientsPaged(req.Search, req.OrderBy, req.Page, req.PageSize))
             .Select(i => i.ToDto())
             .ToArray();
 

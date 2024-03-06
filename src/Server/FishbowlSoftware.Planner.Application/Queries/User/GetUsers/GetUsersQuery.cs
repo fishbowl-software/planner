@@ -4,6 +4,6 @@ using MediatR;
 
 namespace FishbowlSoftware.Planner.Application.Queries;
 
-public class GetUsersQuery : PagedQuery, IRequest<PagedResult<UserDto>>
+public class GetUsersQuery : SearchableQuery, IRequest<PagedResult<UserDto>>
 {
 }

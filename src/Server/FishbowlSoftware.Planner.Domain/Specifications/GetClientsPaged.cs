@@ -7,10 +7,17 @@ namespace FishbowlSoftware.Planner.Domain.Specifications;
 public class GetClientsPaged : BaseSpecification<Client>
 {
     public GetClientsPaged(
+        string? searchQuery,
         string? orderBy,
         int page,
         int pageSize)
     {
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            Criteria = i =>
+                i.Name != null && i.Name.Contains(searchQuery);
+        }
+        
         ApplyOrderBy(orderBy);
         ApplyPaging(page, pageSize);
     }

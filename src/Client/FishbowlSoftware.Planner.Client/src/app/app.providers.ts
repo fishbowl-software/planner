@@ -1,25 +1,19 @@
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {ApplicationConfig, importProvidersFrom} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {provideAnimations} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {provideRouter} from '@angular/router';
 import {provideOAuthClient} from 'angular-oauth2-oidc';
 import {MessageService} from 'primeng/api';
-import {APP_CONFIG} from '@configs';
-import {APP_ROUTES} from './app.routes';
+import {authInterceptor} from '@core/interceptors';
+import {AppRoutes} from './app.routes';
 
-export const APP_PROVIDERS: ApplicationConfig = {
+export const AppProviders: ApplicationConfig = {
   providers: [
-    provideRouter(APP_ROUTES),
-    provideHttpClient(),
-    provideAnimations(),
-    provideOAuthClient({
-      resourceServer: {
-        allowedUrls: [APP_CONFIG.apiUrl],
-        sendAccessToken: true,
-      }
-    }),
-    importProvidersFrom(BrowserModule),
+    provideRouter(AppRoutes),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideOAuthClient(),
+    importProvidersFrom(BrowserModule, BrowserAnimationsModule),
     MessageService,
   ],
 }

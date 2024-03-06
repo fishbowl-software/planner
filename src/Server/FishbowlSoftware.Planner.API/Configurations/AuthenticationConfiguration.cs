@@ -56,6 +56,8 @@ public static class AuthenticationConfiguration
                 options.Authority = configuration["Authentication:IdentityServer:Authority"];
                 options.Audience = configuration["Authentication:IdentityServer:Audience"];
                 options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters.ValidateAudience = false;
+                options.TokenValidationParameters.ValidateIssuer = false;
             });
     }
 }

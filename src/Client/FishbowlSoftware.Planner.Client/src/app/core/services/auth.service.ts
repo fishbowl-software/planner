@@ -41,6 +41,8 @@ export class AuthService {
     this.userData = {
       id: userData.info.sub,
       email: userData.info.email,
+      firstName: userData.info.given_name,
+      lastName: userData.info.family_name,
     };
 
     this.userDataSubject.next(this.userData);

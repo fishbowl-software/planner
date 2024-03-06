@@ -25,7 +25,6 @@ internal class CreateClientHandler : RequestHandler<CreateClientCommand, Result>
         }
         
         var newClient = Client.Create(req.Name!, user);
-        
         await _uow.Repository<Client>().AddAsync(newClient);
         await _uow.SaveChangesAsync(ct);
         return Result.CreateSuccess();
