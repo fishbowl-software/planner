@@ -1,9 +1,8 @@
 <div class="sidebar text-bg-dark" [ngClass]="{minimized: isMinimized}">
   @if (!isMinimized) {
-    <a href="/"
-      class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
       <span class="fs-4">Planner</span>
-    </a>
+    </div>
 
     <hr />
   }
@@ -17,6 +16,7 @@
         [routerLinkActive]="'active'"
         [ngClass]="{'border-bottom rounded-0': isMinimized}">
         <i class="bi bi-people-fill" [ngClass]="{'fs-3': isMinimized}"></i>
+        
         @if (!isMinimized) {
           Clients
         }
@@ -28,6 +28,7 @@
         [routerLinkActive]="'active'"
         [ngClass]="{'border-bottom rounded-0': isMinimized}">
         <i class="bi bi-window-stack" [ngClass]="{'fs-3': isMinimized}"></i>
+
         @if (!isMinimized) {
           Projects
         }
@@ -39,6 +40,7 @@
         [routerLinkActive]="'active'"
         [ngClass]="{'border-bottom rounded-0': isMinimized}">
         <i class="bi bi-boxes" [ngClass]="{'fs-3': isMinimized}"></i>
+
         @if (!isMinimized) {
           Applications
         }
@@ -59,19 +61,25 @@
   <hr />
 
   <div class="dropdown d-flex justify-content-center">
-    <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+    <div class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
       data-bs-toggle="dropdown"
       aria-expanded="false">
       <i class="bi bi-person-circle fs-3"></i>
 
       @if (!isMinimized) {
-        <span class="ms-2">Sukhrob Ilyosbekov</span>
+        <span class="ms-2">{{user?.email}}</span>
       }
-    </a>
+    </div>
     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-      <li><a class="dropdown-item" href="#">Profile</a></li>
-      <li><hr class="dropdown-divider" /></li>
-      <li><a class="dropdown-item" href="#">Sign out</a></li>
+      <li>
+        <button class="dropdown-item">Profile</button>
+      </li>
+      <li>
+        <hr class="dropdown-divider" />
+      </li>
+      <li>
+        <button class="dropdown-item" (click)="logout()">Sign out</button>
+      </li>
     </ul>
   </div>
 </div>

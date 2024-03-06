@@ -29,7 +29,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles/imports.scss"
+              "src/styles/imports.scss",
+              "src/styles/global.scss"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
@@ -93,7 +94,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles/imports.scss"
+              "src/styles/imports.scss",
+              "src/styles/global.scss"
             ],
             "scripts": []
           }

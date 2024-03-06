@@ -1,6 +1,7 @@
 import {Routes} from '@angular/router';
-import {Error404Component} from './pages/error404';
-import {UnauthorizedComponent} from './pages/unauthorized';
+import {Error404Component} from '@pages/error404';
+import {UnauthorizedComponent} from '@pages/unauthorized';
+import {LoginComponent} from '@pages/login';
 
 export const APP_ROUTES: Routes = [
   {
@@ -28,6 +29,10 @@ export const APP_ROUTES: Routes = [
     data: { 
       breadcrumb: 'Applications' 
     }
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   },
   {
     path: 'unauthorized',

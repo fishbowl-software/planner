@@ -1,8 +1,13 @@
 <div class="d-flex vh-100">
-  <app-sidebar></app-sidebar>
-
+  @if (isAuthenticated) {
+    <app-sidebar></app-sidebar>
+  }
+  
   <div class="vw-100">
-    <app-breadcrumb></app-breadcrumb>
+    @if (isAuthenticated) {
+      <app-breadcrumb></app-breadcrumb>
+    }
+    
     <div class="px-2 pt-4">
       <router-outlet></router-outlet>
     </div>
