@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
+import {ToastModule} from 'primeng/toast';
 import {AuthService} from '@core/services';
 import {BreadcrumbComponent, SidebarComponent} from '@layout';
 
@@ -7,7 +8,12 @@ import {BreadcrumbComponent, SidebarComponent} from '@layout';
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
-  imports: [BreadcrumbComponent, SidebarComponent, RouterOutlet],
+  imports: [
+    BreadcrumbComponent,
+    SidebarComponent,
+    RouterOutlet,
+    ToastModule,
+  ],
 })
 export class AppComponent {
   constructor(private readonly authService: AuthService) {}
