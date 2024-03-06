@@ -15,3 +15,8 @@
 
 5. **Run the Client Application:**
 - Execute the [run-client](./scripts/run-client.cmd) CMD script file to start the Angular client application.
+
+## Associated localhost addresses for each application:
+- https://localhost:7000 - Web API application
+- https://localhost:7001 - Identity Server application
+- https://localhost:7002 - Angular SPA
