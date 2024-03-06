@@ -4,12 +4,10 @@ import {BehaviorSubject} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {MenuItem} from 'primeng/api';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class BreadcrumbService {
-  private readonly _breadcrumbs$ = new BehaviorSubject<MenuItem[]>([]);
-  public readonly breadcrumbs$ = this._breadcrumbs$.asObservable();
+  private readonly breadcrumbsSubject = new BehaviorSubject<MenuItem[]>([]);
+  public readonly breadcrumbs$ = this.breadcrumbsSubject.asObservable();
 
   constructor(private readonly router: Router) {
     this.router.events
@@ -19,7 +17,7 @@ export class BreadcrumbService {
         const root = this.router.routerState.snapshot.root;
         const breadcrumbs: MenuItem[] = [];
         this.addBreadcrumbItem(root, [], breadcrumbs);
-        this._breadcrumbs$.next(breadcrumbs);
+        this.breadcrumbsSubject.next(breadcrumbs);
       });
   }
 

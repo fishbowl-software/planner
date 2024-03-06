@@ -5,10 +5,10 @@ import {MessageService} from 'primeng/api';
 import {APP_CONFIG} from '@configs';
 import {SearchableQuery} from '@core/models';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ApiService {
-  private baseUrl = APP_CONFIG.apiUrl;
-  private headers: Record<string, string> = {'content-type': 'application/json'};
+  private readonly baseUrl = APP_CONFIG.apiUrl;
+  private readonly headers: Record<string, string> = {'content-type': 'application/json'};
 
   constructor(
     private readonly httpClient: HttpClient,

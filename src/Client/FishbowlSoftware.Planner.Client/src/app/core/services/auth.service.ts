@@ -4,13 +4,11 @@ import {Subject} from 'rxjs';
 import {AUTH_CONFIG} from '@configs';
 import {UserDto} from '@core/models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({providedIn: 'root'})
 export class AuthService {
   private userData: UserDto | null = null;
-  private userDataSubject = new Subject<UserDto | null>();
-  public userData$ = this.userDataSubject.asObservable();
+  private readonly userDataSubject = new Subject<UserDto | null>();
+  public readonly userData$ = this.userDataSubject.asObservable();
 
   constructor(private readonly oauthService: OAuthService) {
     this.oauthService.configure(AUTH_CONFIG);
