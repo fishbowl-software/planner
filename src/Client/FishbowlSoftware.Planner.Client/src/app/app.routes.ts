@@ -5,12 +5,29 @@ import {UnauthorizedComponent} from './pages/unauthorized';
 export const APP_ROUTES: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'clients',
     pathMatch: 'full',
   },
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home').then(m => m.HOME_ROUTES),
+    path: 'clients',
+    loadChildren: () => import('./pages/client').then(m => m.CLIENT_ROUTES),
+    data: { 
+      breadcrumb: 'Clients' 
+    }
+  },
+  {
+    path: 'projects',
+    loadChildren: () => import('./pages/project').then(m => m.PROJECT_ROUTES),
+    data: { 
+      breadcrumb: 'Projects' 
+    }
+  },
+  {
+    path: 'applications',
+    loadChildren: () => import('./pages/applications').then(m => m.APPLICATION_ROUTES),
+    data: { 
+      breadcrumb: 'Applications' 
+    }
   },
   {
     path: 'unauthorized',

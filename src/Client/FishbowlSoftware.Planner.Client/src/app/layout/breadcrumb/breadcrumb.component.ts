@@ -1,65 +1,34 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import {Component, OnDestroy} from '@angular/core';
+import {Subscription} from 'rxjs';
 import {MenuItem} from 'primeng/api';
 import {BreadcrumbModule} from 'primeng/breadcrumb';
+import {BreadcrumbService} from '@core/services';
 
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
-  styleUrls: ['./breadcrumb.component.scss'],
   standalone: true,
   imports: [BreadcrumbModule],
 })
-export class BreadcrumbComponent implements OnInit {
+export class BreadcrumbComponent implements OnDestroy {
   public readonly home: MenuItem;
-  public menuItems: MenuItem[];
+  private breadcrumbSubscription: Subscription;
+  public menuItems: MenuItem[] = [];
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.menuItems = [];
+  constructor(breadcrumbService: BreadcrumbService) {
     this.home = {
-      icon: 'pi pi-home',
+      icon: 'bi bi-house',
       routerLink: '/',
     };
+
+    this.breadcrumbSubscription = breadcrumbService.breadcrumbs$.subscribe(items => {
+      this.menuItems = items;
+    });
   }
 
-  public ngOnInit(): void {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.menuItems = this.createBreadcrumbs(this.route.root);
-      });
-  }
-
-  private createBreadcrumbs(
-    route: ActivatedRoute,
-    url = '',
-    items: MenuItem[] = []
-  ): MenuItem[] {
-    if (!route) {
-      return items;
+  ngOnDestroy(): void {
+    if (this.breadcrumbSubscription) {
+      this.breadcrumbSubscription.unsubscribe();
     }
-
-    for (const child of route.children) {
-      const routeURL = child.snapshot.url
-        .map(segment => segment.path)
-        .join('/');
-      if (routeURL !== '') {
-        url += `/${routeURL}`;
-      }
-
-      const label = child.snapshot.data['breadcrumb'] as string;
-
-      if (label) {
-        items.push({label, routerLink: url});
-      }
-
-      this.createBreadcrumbs(child, url, items);
-    }
-
-    return items;
   }
 }

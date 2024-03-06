@@ -1,0 +1,19 @@
+.sidebar {
+  position: sticky;
+  width: 250px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 1rem;
+}
+
+.sidebar.minimized {
+  width: 80px;
+  padding: 1rem 0 1rem 0;
+}

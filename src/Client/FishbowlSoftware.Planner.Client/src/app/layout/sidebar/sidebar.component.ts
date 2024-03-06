@@ -1,4 +1,6 @@
+import {CommonModule} from '@angular/common';
 import {Component} from '@angular/core';
+import {RouterModule} from '@angular/router';
 import {ButtonModule} from 'primeng/button';
 import {SidebarModule} from 'primeng/sidebar';
 
@@ -7,15 +9,14 @@ import {SidebarModule} from 'primeng/sidebar';
   standalone: true,
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
-  imports: [ButtonModule, SidebarModule],
+  imports: [CommonModule, ButtonModule, SidebarModule, RouterModule],
 })
 export class SidebarComponent {
-  visible: boolean = false;
+  public isMinimized: boolean = false;
 
   constructor() {}
 
-  // Method to toggle the sidebar visibility
-  toggleSidebar() {
-    this.visible = !this.visible;
+  toggleMinimize() {
+    this.isMinimized = !this.isMinimized;
   }
 }
