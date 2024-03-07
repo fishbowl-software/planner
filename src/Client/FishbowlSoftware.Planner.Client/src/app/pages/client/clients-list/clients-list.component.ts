@@ -21,17 +21,12 @@ import {SortUtils} from '@shared/utils';
   ],
 })
 export class ClientsListComponent {
-  public clients: ClientDto[];
-  public isLoading: boolean;
-  public totalRecords: number;
-  public first: number;
+  public clients: ClientDto[] = [];
+  public isLoading = true;
+  public totalRecords = 0;
+  public first = 0;
 
-  constructor(private readonly apiService: ApiService) {
-    this.clients = [];
-    this.isLoading = false;
-    this.totalRecords = 0;
-    this.first = 0;
-  }
+  constructor(private readonly apiService: ApiService) {}
 
   search(event: Event) {
     this.isLoading = true;

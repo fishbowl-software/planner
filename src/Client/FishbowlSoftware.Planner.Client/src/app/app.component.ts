@@ -1,24 +1,30 @@
 import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {ToastModule} from 'primeng/toast';
-import {AuthService} from '@core/services';
-import {BreadcrumbComponent, SidebarComponent} from '@layout';
+import {AuthService, ThemeService} from '@core/services';
+import {TopbarComponent, SidebarComponent} from '@layout';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
   imports: [
-    BreadcrumbComponent,
+    TopbarComponent,
     SidebarComponent,
-    RouterOutlet,
+    RouterModule,
     ToastModule,
   ],
 })
 export class AppComponent {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly themeService: ThemeService,
+  )
+  {
+    this.themeService.applyThemeFromStorage();
+  }
 
-  get isAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
   }
 }

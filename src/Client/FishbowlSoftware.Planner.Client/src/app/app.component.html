@@ -1,13 +1,13 @@
 <p-toast key="notification" position="top-right"></p-toast>
 
 <div class="d-flex vh-100 overflow-hidden">
-  @if (isAuthenticated) {
+  @if (isAuthenticated()) {
     <app-sidebar></app-sidebar>
   }
   
   <div class="vw-100">
-    @if (isAuthenticated) {
-      <app-breadcrumb></app-breadcrumb>
+    @if (isAuthenticated()) {
+      <app-topbar></app-topbar>
     }
     
     <div class="px-2 pt-4">

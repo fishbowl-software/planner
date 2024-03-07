@@ -1,0 +1,9 @@
+.row {
+  background-color: var(--surface-100);
+}
+
+:host ::ng-deep .p-breadcrumb {
+  background-color: var(--surface-100);
+  border: none;
+  padding: 0.5rem;
+}

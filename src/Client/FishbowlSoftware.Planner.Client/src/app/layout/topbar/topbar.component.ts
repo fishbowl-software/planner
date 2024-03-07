@@ -3,17 +3,19 @@ import {Subscription} from 'rxjs';
 import {MenuItem} from 'primeng/api';
 import {BreadcrumbModule} from 'primeng/breadcrumb';
 import {BreadcrumbService} from '@core/services';
+import {ThemeSwitcherComponent} from '@shared/components';
 
 @Component({
-  selector: 'app-breadcrumb',
-  templateUrl: './breadcrumb.component.html',
+  selector: 'app-topbar',
+  templateUrl: './topbar.component.html',
+  styleUrl: './topbar.component.scss',
   standalone: true,
-  imports: [BreadcrumbModule],
+  imports: [BreadcrumbModule, ThemeSwitcherComponent],
 })
-export class BreadcrumbComponent implements OnDestroy {
+export class TopbarComponent implements OnDestroy {
   public readonly home: MenuItem;
-  private breadcrumbSubscription: Subscription;
   public menuItems: MenuItem[] = [];
+  private breadcrumbSubscription: Subscription;
 
   constructor(breadcrumbService: BreadcrumbService) {
     this.home = {
