@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace FishbowlSoftware.Planner.API.StartupConfigurations;
+namespace FishbowlSoftware.Planner.API.Configurations;
 
 public static class SwaggerConfiguration
 {

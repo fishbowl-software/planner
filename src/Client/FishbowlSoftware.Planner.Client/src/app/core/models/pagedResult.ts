@@ -1,6 +1,6 @@
 import {Result} from './result';
 
-export interface PagedResult<T> extends Result<T[]> {
+export type PagedResult<T> = Result<T[]> & {
   totalItems: number;
   totalPages: number;
 }

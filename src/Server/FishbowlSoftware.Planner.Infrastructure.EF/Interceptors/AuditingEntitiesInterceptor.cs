@@ -47,7 +47,9 @@ namespace FishbowlSoftware.Planner.Infrastructure.Interceptors
             }
 
             var userId = _authenticatedUserData?.UserId;
-            foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
+            var auditableEntities = context.ChangeTracker.Entries<IAuditableEntity<string>>();
+            
+            foreach (var entry in auditableEntities)
             {
                 if (entry.State is EntityState.Added)
                 {
@@ -75,7 +77,7 @@ namespace FishbowlSoftware.Planner.Infrastructure.Interceptors
         {
             EntityFrameworkManager.PreBulkInsert = (context, obj) =>
             {
-                if (obj is IEnumerable<AuditableEntity> auditableEntities &&
+                if (obj is IEnumerable<IAuditableEntity<string>> auditableEntities &&
                     context is ApplicationDbContext applicationDbContext)
                 {
                     var userId = applicationDbContext.GetService<AuthenticatedUserData>()?.UserId;

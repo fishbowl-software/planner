@@ -1,8 +1,14 @@
+interface SuccessResult<T> {
+  isSuccess: true;
+  data: T;
+}
+
+interface FailureResult {
+  isSuccess: false;
+  error: string;
+}
+
 /**
  * API result model
  */
-export interface Result<T = unknown> {
-  isSuccess: boolean;
-  data?: T;
-  error?: string;
-}
+export type Result<T = unknown> = SuccessResult<T> | FailureResult;

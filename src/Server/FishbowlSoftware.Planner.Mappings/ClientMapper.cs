@@ -11,7 +11,8 @@ public static class ClientMapper
         {
             Id = entity.Id,
             Name = entity.Name,
-            UserId = entity.UserId
+            User = entity.User?.ToDto(),
+            CreatedDate = entity.CreatedDate
         };
         return dto;
     }

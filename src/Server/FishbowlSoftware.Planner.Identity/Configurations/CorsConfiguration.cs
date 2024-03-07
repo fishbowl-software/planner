@@ -1,4 +1,4 @@
-﻿namespace FishbowlSoftware.Planner.Identity.StartupConfigurations;
+﻿namespace FishbowlSoftware.Planner.Identity.Configurations;
 
 public static class CorsConfiguration
 {

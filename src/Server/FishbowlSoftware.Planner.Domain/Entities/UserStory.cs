@@ -2,7 +2,7 @@
 
 namespace FishbowlSoftware.Planner.Domain.Entities;
 
-public class UserStory : Entity
+public class UserStory : AuditableEntity
 {
     public string? Title { get; set; }
     public string? Description { get; set; }

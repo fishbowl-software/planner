@@ -3,7 +3,7 @@ using FishbowlSoftware.Planner.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace FishbowlSoftware.Planner.API.StartupConfigurations;
+namespace FishbowlSoftware.Planner.API.Configurations;
 
 public static class ControllersConfiguration
 {

@@ -1,4 +1,4 @@
-﻿using FishbowlSoftware.Planner.API.StartupConfigurations;
+﻿using FishbowlSoftware.Planner.API.Configurations;
 using FishbowlSoftware.Planner.API.Middlewares;
 using FishbowlSoftware.Planner.Application;
 using FishbowlSoftware.Planner.Domain;

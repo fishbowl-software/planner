@@ -1,5 +1,5 @@
 using FishbowlSoftware.Planner.Domain;
-using FishbowlSoftware.Planner.Identity.StartupConfigurations;
+using FishbowlSoftware.Planner.Identity.Configurations;
 using FishbowlSoftware.Planner.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Serilog;

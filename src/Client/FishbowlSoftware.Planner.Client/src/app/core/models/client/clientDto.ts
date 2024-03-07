@@ -1,5 +1,7 @@
+import {UserDto} from '../userDto';
+
 export interface ClientDto {
   id: string;
   name: string;
-  userId: string | null;
+  user?: UserDto;
 }

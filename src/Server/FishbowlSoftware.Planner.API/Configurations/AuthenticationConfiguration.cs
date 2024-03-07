@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FishbowlSoftware.Planner.API.StartupConfigurations;
+namespace FishbowlSoftware.Planner.API.Configurations;
 
 public static class AuthenticationConfiguration
 {

@@ -1,19 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace FishbowlSoftware.Planner.Domain.Core;
 
-namespace FishbowlSoftware.Planner.Domain.Core
+public class AuditableEntity : Entity, IAuditableEntity<string>
 {
-    public class AuditableEntity : Entity
-    {
-        [JsonIgnore]
-        public string? CreatedBy { get; set; }
-
-        [JsonIgnore]
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-
-        [JsonIgnore]
-        public string? UpdatedBy { get; set; }
-
-        [JsonIgnore]
-        public DateTime? UpdatedDate { get; set; }
-    }
+    public string? CreatedBy { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+    public string? UpdatedBy { get; set; }
+    public DateTime? UpdatedDate { get; set; }
 }

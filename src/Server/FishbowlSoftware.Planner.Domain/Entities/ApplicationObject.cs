@@ -3,7 +3,7 @@ using FishbowlSoftware.Planner.Shared.Enums;
 
 namespace FishbowlSoftware.Planner.Domain.Entities;
 
-public class ApplicationObject : Entity
+public class ApplicationObject : AuditableEntity
 {
     public string? Name { get; set; }
     public string? Description { get; set; }

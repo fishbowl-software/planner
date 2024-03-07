@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 
-namespace FishbowlSoftware.Planner.Identity.StartupConfigurations;
+namespace FishbowlSoftware.Planner.Identity.Configurations;
 
 public static class AuthenticationConfiguration
 {
