@@ -26,7 +26,7 @@ export const ClientRoutes: Routes = [
     component: EditClientComponent,
     canActivate: [authGuard],
     data: { 
-      breadcrumb: 'Add' 
+      breadcrumb: 'Edit' 
     }
   },
 ];

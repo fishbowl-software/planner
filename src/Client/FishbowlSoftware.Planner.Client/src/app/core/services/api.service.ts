@@ -9,6 +9,7 @@ import {
   UserDto,
   ClientDto,
   CreateClientCommand,
+  UpdateClientCommand,
   Result,
 } from '@core/models';
 
@@ -19,7 +20,7 @@ export class ApiService {
 
   constructor(
     private readonly httpClient: HttpClient,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
   )
   {
   }
@@ -36,6 +37,11 @@ export class ApiService {
 
   //#region Clients API
 
+  getClient(clientId: string): Observable<Result<ClientDto>> {
+    const url = `/clients/${clientId}`;
+    return this.get(url);
+  }
+
   getClients(query?: SearchableQuery): Observable<PagedResult<ClientDto>> {
     const url = `/clients?${this.stringfySearchableQuery(query)}`;
     return this.get(url);
@@ -44,6 +50,11 @@ export class ApiService {
   createClient(command: CreateClientCommand): Observable<Result> {
     const url = `/clients`;
     return this.post(url, command);
+  }
+
+  updateClient(command: UpdateClientCommand): Observable<Result> {
+    const url = `/clients/${command.id}`;
+    return this.put(url, command);
   }
 
   deleteClient(clientId: string): Observable<Result> {

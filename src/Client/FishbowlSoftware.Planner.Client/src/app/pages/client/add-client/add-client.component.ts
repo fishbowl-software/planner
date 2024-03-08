@@ -54,14 +54,12 @@ export class AddClientComponent {
 
     this.isLoading = true;
 
-    const newClient: CreateClientCommand = {
+    const command: CreateClientCommand = {
       name: this.form.value.name!,
       userId: this.form.value.userAccount?.id,
     };
 
-    this.isLoading = true;
-
-    this.apiService.createClient(newClient).subscribe((result) => {
+    this.apiService.createClient(command).subscribe((result) => {
       if (result.isSuccess) {
         this.toastService.showSuccess('New client has been created successfully');
         this.form.reset();
