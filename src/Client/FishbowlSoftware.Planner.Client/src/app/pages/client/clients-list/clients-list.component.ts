@@ -5,8 +5,10 @@ import {CardModule} from 'primeng/card';
 import {TooltipModule} from 'primeng/tooltip';
 import {ButtonModule} from 'primeng/button';
 import {ClientDto} from '@core/models';
-import {ApiService} from '@core/services';
+import {ApiService, ToastService} from '@core/services';
 import {SortUtils} from '@shared/utils';
+import {ConfirmationService} from 'primeng/api';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-clients-list',
@@ -18,7 +20,9 @@ import {SortUtils} from '@shared/utils';
     RouterModule,
     CardModule,
     TableModule,
+    ConfirmDialogModule,
   ],
+  providers: [ConfirmationService],
 })
 export class ClientsListComponent {
   public clients: ClientDto[] = [];
@@ -26,7 +30,13 @@ export class ClientsListComponent {
   public totalRecords = 0;
   public first = 0;
 
-  constructor(private readonly apiService: ApiService) {}
+  constructor(
+    private readonly apiService: ApiService,
+    private readonly confirmationService: ConfirmationService,
+    private readonly toastService: ToastService,
+  )
+  {
+  }
 
   search(event: Event) {
     this.isLoading = true;
@@ -53,6 +63,26 @@ export class ClientsListComponent {
       if (result.isSuccess) {
         this.clients = result.data;
         this.totalRecords = result.totalItems;
+      }
+
+      this.isLoading = false;
+    });
+  }
+
+  confirmToDelete(client: ClientDto) {
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to delete the client '${client.name}'?`,
+      accept: () => this.deleteClient(client),
+    });
+  }
+
+  private deleteClient(client: ClientDto) {
+    this.isLoading = true;
+
+    this.apiService.deleteClient(client.id).subscribe((result) => {
+      if (result.isSuccess) {
+        this.clients = this.clients.filter((c) => c.id !== client.id);
+        this.toastService.showSuccess('A client has been deleted successfully');
       }
 
       this.isLoading = false;

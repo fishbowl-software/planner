@@ -9,6 +9,7 @@ import {
   UserDto,
   ClientDto,
   CreateClientCommand,
+  Result,
 } from '@core/models';
 
 @Injectable({providedIn: 'root'})
@@ -40,9 +41,14 @@ export class ApiService {
     return this.get(url);
   }
 
-  createClient(command: CreateClientCommand): Observable<PagedResult<ClientDto>> {
+  createClient(command: CreateClientCommand): Observable<Result> {
     const url = `/clients`;
     return this.post(url, command);
+  }
+
+  deleteClient(clientId: string): Observable<Result> {
+    const url = `/clients/${clientId}`;
+    return this.delete(url);
   }
 
   //#endregion

@@ -11,6 +11,8 @@
   left: 0;
   z-index: 10;
   padding: 1rem;
+  background-color: var(--bluegray-700);
+  color: var(--primary-color-text);
 }
 
 .sidebar.minimized {
