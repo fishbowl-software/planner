@@ -13,7 +13,7 @@ public static class ControllersConfiguration
             .ConfigureApiBehaviorOptions(options =>
             {
                 options.InvalidModelStateResponseFactory = context =>
-                    new BadRequestObjectResult(Result.CreateError(GetModelStateErrors(context.ModelState)));
+                    new BadRequestObjectResult(Result.CreateFailure(GetModelStateErrors(context.ModelState)));
             });
     }
     

@@ -24,7 +24,7 @@ internal class GetUserHandler : RequestHandler<GetUserQuery, Result<UserDto>>
 
         if (userEntity is null)
         {
-            return Result<UserDto>.CreateError($"Could not find a client with ID {req.Id}");
+            return Result<UserDto>.CreateFailure($"Could not find a client with ID {req.Id}");
         }
 
         var userDto = userEntity.ToDto();

@@ -4,7 +4,7 @@ namespace FishbowlSoftware.Planner.Domain.Entities;
 
 public class UserStory : AuditableEntity
 {
-    public string? Title { get; set; }
+    public string? Name { get; set; }
     public string? Description { get; set; }
     
     public string? FlowId { get; set; }

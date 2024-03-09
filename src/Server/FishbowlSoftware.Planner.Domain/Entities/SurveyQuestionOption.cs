@@ -2,9 +2,9 @@
 
 namespace FishbowlSoftware.Planner.Domain.Entities;
 
-public class QuestionOption : AuditableEntity
+public class SurveyQuestionOption : AuditableEntity
 {
     public string? Text { get; set; }
     public string? QuestionId { get; set; }
-    public Question? Question { get; set; }
+    public SurveyQuestion? Question { get; set; }
 }

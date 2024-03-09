@@ -22,7 +22,7 @@ internal class UpdateClientHandler : RequestHandler<UpdateClientCommand, Result>
 
         if (client is null)
         {
-            return Result.CreateError($"Could not find a client with ID {req.Id}");
+            return Result.CreateFailure($"Could not find a client with ID {req.Id}");
         }
 
         if (!string.IsNullOrEmpty(req.Name) && req.Name != client.Name)

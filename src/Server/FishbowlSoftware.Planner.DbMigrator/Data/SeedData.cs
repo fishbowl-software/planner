@@ -129,6 +129,38 @@ public partial class SeedData : BackgroundService
             _logger.LogInformation("Added 'admin' role to the user '{Admin}'", adminUser.UserName);
         }
     }
+    
+    // private async Task AddBasicSurveyAsync()
+    // {
+    //     var survey = await _uow.Repository<Survey>().GetAsync(i => i.Name == "Survey 1.0");
+    //
+    //     if (survey is not null)
+    //     {
+    //         return;
+    //     }
+    //
+    //     survey = new Survey
+    //     {
+    //         Name = "Survey 1.0",
+    //         Description = "A basic survey",
+    //         Questions =
+    //         [
+    //             new Question
+    //             {
+    //                 Text = "Application type?",
+    //                 Options = [
+    //                     new QuestionOption
+    //                     {
+    //                         Text = "MVC"
+    //                     }
+    //                 ]
+    //             },
+    //         ]
+    //     };
+    //
+    //     await _uow.Repository<Survey>().AddAsync(survey);
+    //     await _uow.SaveChangesAsync();
+    // }
 }
 
 internal record UserData(string Email, string Password);

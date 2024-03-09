@@ -74,10 +74,12 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, string>
         builder.ApplyConfiguration(new FlowEntityMap());
         builder.ApplyConfiguration(new ProjectEntityMap());
         builder.ApplyConfiguration(new QuestionEntityMap());
-        builder.ApplyConfiguration(new QuestionnaireEntityMap());
+        builder.ApplyConfiguration(new SurveyEntityMap());
         builder.ApplyConfiguration(new QuestionOptionEntityMap());
         builder.ApplyConfiguration(new UserStoryEntityMap());
         builder.ApplyConfiguration(new ClientEntityMap());
+        builder.ApplyConfiguration(new ProjectSurveySubmissionMap());
+        builder.ApplyConfiguration(new SurveyQuestionResponseMap());
     }
 
     public TService? GetService<TService>()

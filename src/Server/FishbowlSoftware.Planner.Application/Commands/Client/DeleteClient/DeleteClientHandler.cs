@@ -22,7 +22,7 @@ internal class DeleteUserHandler : RequestHandler<DeleteClientCommand, Result>
 
         if (user is null)
         {
-            return Result.CreateError($"Could not find a client with ID {req.Id}");
+            return Result.CreateFailure($"Could not find a client with ID {req.Id}");
         }
 
         _uow.Repository<Client>().Delete(user);

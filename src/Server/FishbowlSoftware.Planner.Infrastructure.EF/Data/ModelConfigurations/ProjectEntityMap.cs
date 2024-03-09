@@ -10,9 +10,9 @@ internal class ProjectEntityMap : IEntityTypeConfiguration<Project>
     {
         builder.ToTable("Projects");
 
-        builder.HasOne(i => i.Questionnaire)
+        builder.HasMany(i => i.SurveySubmissions)
             .WithOne(i => i.Project)
-            .HasForeignKey<Project>(i => i.QuestionnaireId);
+            .HasForeignKey(i => i.ProjectId);
 
         builder.HasMany(i => i.Applications)
             .WithOne(i => i.Project)

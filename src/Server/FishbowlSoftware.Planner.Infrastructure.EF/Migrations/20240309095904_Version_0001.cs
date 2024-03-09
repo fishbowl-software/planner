@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FishbowSoftware.Planner.Migrations.SqlServer
+namespace FishbowSoftware.Planner.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Version_0001 : Migration
@@ -33,6 +33,10 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Organization = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Address_City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address_Line1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -57,6 +61,22 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Surveys",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Surveys", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,7 +191,11 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -185,6 +209,28 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 });
 
             migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SurveyId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Surveys_SurveyId",
+                        column: x => x.SurveyId,
+                        principalTable: "Surveys",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -192,7 +238,10 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    QuestionnaireId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -206,23 +255,44 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 });
 
             migrationBuilder.CreateTable(
+                name: "QuestionOptions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    QuestionId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuestionOptions_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Applications",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ProjectId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ProjectId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Applications", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Applications_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Applications_Projects_ProjectId",
                         column: x => x.ProjectId,
@@ -238,7 +308,11 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProjectId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ProjectId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -251,19 +325,25 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questionnaires",
+                name: "ProjectSurveySubmissions",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProjectId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ProjectId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SurveyId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questionnaires", x => x.Id);
+                    table.PrimaryKey("PK_ProjectSurveySubmissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questionnaires_Projects_ProjectId",
+                        name: "FK_ProjectSurveySubmissions_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProjectSurveySubmissions_Surveys_SurveyId",
+                        column: x => x.SurveyId,
+                        principalTable: "Surveys",
                         principalColumn: "Id");
                 });
 
@@ -272,9 +352,13 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FlowId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    FlowId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -288,20 +372,31 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questions",
+                name: "SurveyQuestionResponses",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    QuestionnaireId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ProjectSurveySubmissionId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    QuestionId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    OptionId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.PrimaryKey("PK_SurveyQuestionResponses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questions_Questionnaires_QuestionnaireId",
-                        column: x => x.QuestionnaireId,
-                        principalTable: "Questionnaires",
+                        name: "FK_SurveyQuestionResponses_ProjectSurveySubmissions_ProjectSurveySubmissionId",
+                        column: x => x.ProjectSurveySubmissionId,
+                        principalTable: "ProjectSurveySubmissions",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SurveyQuestionResponses_QuestionOptions_OptionId",
+                        column: x => x.OptionId,
+                        principalTable: "QuestionOptions",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SurveyQuestionResponses_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
                         principalColumn: "Id");
                 });
 
@@ -313,7 +408,11 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ObjectType = table.Column<int>(type: "int", nullable: false),
-                    UserStoryId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserStoryId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -326,36 +425,10 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "QuestionOptions",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    QuestionId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuestionOptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_QuestionOptions_Questions_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Questions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicationObjects_UserStoryId",
                 table: "ApplicationObjects",
                 column: "UserStoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Applications_ClientId",
-                table: "Applications",
-                column: "ClientId",
-                unique: true,
-                filter: "[ClientId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_ProjectId",
@@ -419,11 +492,14 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questionnaires_ProjectId",
-                table: "Questionnaires",
-                column: "ProjectId",
-                unique: true,
-                filter: "[ProjectId] IS NOT NULL");
+                name: "IX_ProjectSurveySubmissions_ProjectId",
+                table: "ProjectSurveySubmissions",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectSurveySubmissions_SurveyId",
+                table: "ProjectSurveySubmissions",
+                column: "SurveyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionOptions_QuestionId",
@@ -431,9 +507,24 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_QuestionnaireId",
+                name: "IX_Questions_SurveyId",
                 table: "Questions",
-                column: "QuestionnaireId");
+                column: "SurveyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SurveyQuestionResponses_OptionId",
+                table: "SurveyQuestionResponses",
+                column: "OptionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SurveyQuestionResponses_ProjectSurveySubmissionId",
+                table: "SurveyQuestionResponses",
+                column: "ProjectSurveySubmissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SurveyQuestionResponses_QuestionId",
+                table: "SurveyQuestionResponses",
+                column: "QuestionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserStories_FlowId",
@@ -466,7 +557,7 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "QuestionOptions");
+                name: "SurveyQuestionResponses");
 
             migrationBuilder.DropTable(
                 name: "UserStories");
@@ -475,16 +566,22 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "ProjectSurveySubmissions");
+
+            migrationBuilder.DropTable(
+                name: "QuestionOptions");
 
             migrationBuilder.DropTable(
                 name: "Flows");
 
             migrationBuilder.DropTable(
-                name: "Questionnaires");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "Surveys");
 
             migrationBuilder.DropTable(
                 name: "Clients");

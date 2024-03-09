@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FishbowlSoftware.Planner.Infrastructure.Data.EntityConfigurations;
 
-internal class QuestionEntityMap : IEntityTypeConfiguration<Question>
+internal class QuestionEntityMap : IEntityTypeConfiguration<SurveyQuestion>
 {
-    public void Configure(EntityTypeBuilder<Question> builder)
+    public void Configure(EntityTypeBuilder<SurveyQuestion> builder)
     {
         builder.ToTable("Questions");
 

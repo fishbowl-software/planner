@@ -5,16 +5,19 @@ using FishbowlSoftware.Planner.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FishbowSoftware.Planner.Migrations.SqlServer
+namespace FishbowSoftware.Planner.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240309095904_Version_0001")]
+    partial class Version_0001
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,9 +29,6 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Application", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ClientId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreatedBy")
@@ -53,10 +53,6 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId")
-                        .IsUnique()
-                        .HasFilter("[ClientId] IS NOT NULL");
 
                     b.HasIndex("ProjectId");
 
@@ -184,9 +180,6 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QuestionnaireId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -200,7 +193,54 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.ToTable("Projects", (string)null);
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Question", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.ProjectSurveySubmission", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProjectId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SurveyId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("ProjectSurveySubmissions", (string)null);
+                });
+
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Survey", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -211,7 +251,32 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("QuestionnaireId")
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Surveys", (string)null);
+                });
+
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestion", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SurveyId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
@@ -225,12 +290,12 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionnaireId");
+                    b.HasIndex("SurveyId");
 
                     b.ToTable("Questions", (string)null);
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.QuestionOption", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestionOption", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -260,60 +325,29 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.ToTable("QuestionOptions", (string)null);
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Questionnaire", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestionResponse", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProjectId")
+                    b.Property<string>("OptionId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("ProjectSurveySubmissionId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("QuestionId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId")
-                        .IsUnique()
-                        .HasFilter("[ProjectId] IS NOT NULL");
+                    b.HasIndex("OptionId");
 
-                    b.ToTable("Questionnaires", (string)null);
-                });
+                    b.HasIndex("ProjectSurveySubmissionId");
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Role", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasIndex("QuestionId");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("SurveyQuestionResponses", (string)null);
                 });
 
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.User", b =>
@@ -442,7 +476,7 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.Property<string>("FlowId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
@@ -566,16 +600,10 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
 
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Application", b =>
                 {
-                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Client", "Client")
-                        .WithOne()
-                        .HasForeignKey("FishbowlSoftware.Planner.Domain.Entities.Application", "ClientId");
-
                     b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Project", "Project")
                         .WithMany("Applications")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Client");
 
                     b.Navigation("Project");
                 });
@@ -619,18 +647,33 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Question", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.ProjectSurveySubmission", b =>
                 {
-                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Questionnaire", "Questionnaire")
-                        .WithMany("Questions")
-                        .HasForeignKey("QuestionnaireId");
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Project", "Project")
+                        .WithMany("SurveySubmissions")
+                        .HasForeignKey("ProjectId");
 
-                    b.Navigation("Questionnaire");
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Survey", "Survey")
+                        .WithMany()
+                        .HasForeignKey("SurveyId");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Survey");
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.QuestionOption", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestion", b =>
                 {
-                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Question", "Question")
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Survey", "Survey")
+                        .WithMany("Questions")
+                        .HasForeignKey("SurveyId");
+
+                    b.Navigation("Survey");
+                });
+
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestionOption", b =>
+                {
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestion", "Question")
                         .WithMany("Options")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -638,13 +681,25 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Questionnaire", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestionResponse", b =>
                 {
-                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.Project", "Project")
-                        .WithOne("Questionnaire")
-                        .HasForeignKey("FishbowlSoftware.Planner.Domain.Entities.Questionnaire", "ProjectId");
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestionOption", "Option")
+                        .WithMany()
+                        .HasForeignKey("OptionId");
 
-                    b.Navigation("Project");
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.ProjectSurveySubmission", "ProjectSurveySubmission")
+                        .WithMany("QuestionResponses")
+                        .HasForeignKey("ProjectSurveySubmissionId");
+
+                    b.HasOne("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestion", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId");
+
+                    b.Navigation("Option");
+
+                    b.Navigation("ProjectSurveySubmission");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.UserStory", b =>
@@ -724,17 +779,22 @@ namespace FishbowSoftware.Planner.Migrations.SqlServer
 
                     b.Navigation("Flows");
 
-                    b.Navigation("Questionnaire");
+                    b.Navigation("SurveySubmissions");
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Question", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.ProjectSurveySubmission", b =>
                 {
-                    b.Navigation("Options");
+                    b.Navigation("QuestionResponses");
                 });
 
-            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Questionnaire", b =>
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.Survey", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.SurveyQuestion", b =>
+                {
+                    b.Navigation("Options");
                 });
 
             modelBuilder.Entity("FishbowlSoftware.Planner.Domain.Entities.UserStory", b =>

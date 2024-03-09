@@ -23,7 +23,7 @@ internal class GetClientHandler : RequestHandler<GetClientQuery, Result<ClientDt
 
         if (clientEntity is null)
         {
-            return Result<ClientDto>.CreateError($"Could not find a client with ID {req.Id}");
+            return Result<ClientDto>.CreateFailure($"Could not find a client with ID {req.Id}");
         }
 
         var clientDto = clientEntity.ToDto();
