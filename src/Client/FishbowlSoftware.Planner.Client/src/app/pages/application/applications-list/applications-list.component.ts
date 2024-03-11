@@ -6,14 +6,14 @@ import {TooltipModule} from 'primeng/tooltip';
 import {ButtonModule} from 'primeng/button';
 import {ConfirmationService} from 'primeng/api';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {ProjectDto} from '@core/models';
+import {ApplicationDto} from '@core/models';
 import {ApiService, ToastService} from '@core/services';
 import {SortUtils} from '@shared/utils';
 
 @Component({
-  selector: 'app-projects-list',
+  selector: 'app-applications-list',
   standalone: true,
-  templateUrl: './projects-list.component.html',
+  templateUrl: './applications-list.component.html',
   imports: [
     ButtonModule,
     TooltipModule,
@@ -24,8 +24,8 @@ import {SortUtils} from '@shared/utils';
   ],
   providers: [ConfirmationService],
 })
-export class ProjectsListComponent {
-  public projects: ProjectDto[] = [];
+export class ApplicationsListComponent {
+  public applications: ApplicationDto[] = [];
   public isLoading = true;
   public totalRecords = 0;
   public first = 0;
@@ -42,9 +42,9 @@ export class ProjectsListComponent {
     this.isLoading = true;
     const searchValue = (event.target as HTMLInputElement).value;
 
-    this.apiService.getProjects({search: searchValue}).subscribe((result) => {
+    this.apiService.getApplications({search: searchValue}).subscribe((result) => {
       if (result.isSuccess) {
-        this.projects = result.data;
+        this.applications = result.data;
         this.totalRecords = result.totalItems;
       }
 
@@ -59,9 +59,9 @@ export class ProjectsListComponent {
     const page = first / rows + 1;
     const sortField = SortUtils.parseSortProperty(event.sortField as string, event.sortOrder);
 
-    this.apiService.getProjects({orderBy: sortField, page: page, pageSize: rows}).subscribe((result) => {
+    this.apiService.getApplications({orderBy: sortField, page: page, pageSize: rows}).subscribe((result) => {
       if (result.isSuccess) {
-        this.projects = result.data;
+        this.applications = result.data;
         this.totalRecords = result.totalItems;
       }
 
@@ -69,20 +69,20 @@ export class ProjectsListComponent {
     });
   }
 
-  confirmToDelete(project: ProjectDto) {
+  confirmToDelete(application: ApplicationDto) {
     this.confirmationService.confirm({
-      message: `Are you sure that you want to delete the project '${project.name}'?`,
-      accept: () => this.deleteProject(project),
+      message: `Are you sure that you want to delete the application '${application.name}'?`,
+      accept: () => this.deleteApplication(application),
     });
   }
 
-  private deleteProject(project: ProjectDto) {
+  private deleteApplication(application: ApplicationDto) {
     this.isLoading = true;
 
-    this.apiService.deleteProject(project.id).subscribe((result) => {
+    this.apiService.deleteApplication(application.id).subscribe((result) => {
       if (result.isSuccess) {
-        this.projects = this.projects.filter((c) => c.id !== project.id);
-        this.toastService.showSuccess('A project has been deleted successfully');
+        this.applications = this.applications.filter((c) => c.id !== application.id);
+        this.toastService.showSuccess('An application has been deleted successfully');
       }
 
       this.isLoading = false;

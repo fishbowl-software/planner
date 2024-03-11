@@ -25,7 +25,7 @@ export const AppRoutes: Routes = [
   },
   {
     path: 'applications',
-    loadChildren: () => import('./pages/applications').then(m => m.ApplicationRoutes),
+    loadChildren: () => import('./pages/application').then(m => m.ApplicationRoutes),
     data: { 
       breadcrumb: 'Applications' 
     }

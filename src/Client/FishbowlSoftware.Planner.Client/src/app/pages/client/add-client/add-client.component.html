@@ -13,11 +13,11 @@
 
         <div class="mb-3">
           <label for="name" class="form-label">Client Name <span class="text-danger">*</span></label>
-          <input id="name" formControlName="name" class="form-control" />
+          <input pInputText id="name" formControlName="name" class="w-100" />
         </div>
         <div class="mb-3">
           <label for="userAccount" class="form-label">Client Account</label>
-          <p-autoComplete formControlName="userAccount" styleClass="w-100" inputStyleClass="form-control"
+          <p-autoComplete formControlName="userAccount" styleClass="w-100" inputStyleClass="w-100"
             placeholder="Type user first name, last name or email" field="email" [minLength]="3" [suggestions]="suggestedUsers"
             (completeMethod)="searchUser($event)">
           </p-autoComplete>

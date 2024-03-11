@@ -5,3 +5,5 @@ export * from './pagedResult';
 export * from './pagedIntervalQuery';
 export * from './result';
 export * from './client';
+export * from './project';
+export * from './application';

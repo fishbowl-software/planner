@@ -5,15 +5,16 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {InputTextModule} from 'primeng/inputtext';
+import {InputTextareaModule} from 'primeng/inputtextarea';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ValidationSummaryComponent} from '@shared/components';
-import {CreateClientCommand, UserDto} from '@core/models';
+import {CreateProjectCommand} from '@core/models';
 import {ApiService, ToastService} from '@core/services';
 
 @Component({
-  selector: 'app-add-client',
+  selector: 'app-add-project',
   standalone: true,
-  templateUrl: './add-client.component.html',
+  templateUrl: './add-project.component.html',
   imports: [
     RouterModule,
     ButtonModule,
@@ -23,29 +24,21 @@ import {ApiService, ToastService} from '@core/services';
     AutoCompleteModule,
     ReactiveFormsModule,
     InputTextModule,
+    InputTextareaModule,
   ],
 })
-export class AddClientComponent {
+export class AddProjectComponent {
   public isLoading = false;
-  public suggestedUsers: UserDto[] = [];
-  public form: FormGroup<CreateClientForm>;
+  public form: FormGroup<CreateProjectForm>;
 
   constructor(
     private readonly apiService: ApiService,
     private readonly toastService: ToastService,
   )
   {
-    this.form = new FormGroup<CreateClientForm>({
+    this.form = new FormGroup<CreateProjectForm>({
       name: new FormControl('', {validators: Validators.required, nonNullable: true}),
-      userAccount: new FormControl(null),
-    });
-  }
-
-  searchUser(event: {query: string}) {
-    this.apiService.getUsers({search: event.query}).subscribe(result => {
-      if (result.isSuccess && result.data) {
-        this.suggestedUsers = result.data;
-      }
+      description: new FormControl(null),
     });
   }
 
@@ -56,14 +49,14 @@ export class AddClientComponent {
 
     this.isLoading = true;
 
-    const command: CreateClientCommand = {
+    const command: CreateProjectCommand = {
       name: this.form.value.name!,
-      userId: this.form.value.userAccount?.id,
+      description: this.form.value.description!,
     };
 
-    this.apiService.createClient(command).subscribe((result) => {
+    this.apiService.createProject(command).subscribe((result) => {
       if (result.isSuccess) {
-        this.toastService.showSuccess('New client has been created successfully');
+        this.toastService.showSuccess('New project has been created successfully');
         this.form.reset();
       }
 
@@ -72,7 +65,7 @@ export class AddClientComponent {
   }
 }
 
-interface CreateClientForm {
+interface CreateProjectForm {
   name: FormControl<string>;
-  userAccount: FormControl<UserDto | null>;
+  description: FormControl<string | null>;
 }

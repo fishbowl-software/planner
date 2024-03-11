@@ -4,4 +4,5 @@ export interface ClientDto {
   id: string;
   name: string;
   user?: UserDto;
+  createdDate: Date;
 }

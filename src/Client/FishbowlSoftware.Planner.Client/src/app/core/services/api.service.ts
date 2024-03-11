@@ -11,6 +11,12 @@ import {
   CreateClientCommand,
   UpdateClientCommand,
   Result,
+  ProjectDto,
+  CreateProjectCommand,
+  UpdateProjectCommand,
+  ApplicationDto,
+  CreateApplicationCommand,
+  UpdateApplicationCommand,
 } from '@core/models';
 
 @Injectable({providedIn: 'root'})
@@ -37,8 +43,8 @@ export class ApiService {
 
   //#region Clients API
 
-  getClient(clientId: string): Observable<Result<ClientDto>> {
-    const url = `/clients/${clientId}`;
+  getClient(id: string): Observable<Result<ClientDto>> {
+    const url = `/clients/${id}`;
     return this.get(url);
   }
 
@@ -57,8 +63,68 @@ export class ApiService {
     return this.put(url, command);
   }
 
-  deleteClient(clientId: string): Observable<Result> {
-    const url = `/clients/${clientId}`;
+  deleteClient(id: string): Observable<Result> {
+    const url = `/clients/${id}`;
+    return this.delete(url);
+  }
+
+  //#endregion
+
+
+  //#region Projects API
+
+  getProject(id: string): Observable<Result<ProjectDto>> {
+    const url = `/projects/${id}`;
+    return this.get(url);
+  }
+
+  getProjects(query?: SearchableQuery): Observable<PagedResult<ProjectDto>> {
+    const url = `/projects?${this.stringfySearchableQuery(query)}`;
+    return this.get(url);
+  }
+
+  createProject(command: CreateProjectCommand): Observable<Result> {
+    const url = `/projects`;
+    return this.post(url, command);
+  }
+
+  updateProject(command: UpdateProjectCommand): Observable<Result> {
+    const url = `/projects/${command.id}`;
+    return this.put(url, command);
+  }
+
+  deleteProject(clientId: string): Observable<Result> {
+    const url = `/projects/${clientId}`;
+    return this.delete(url);
+  }
+
+  //#endregion
+
+
+  //#region Applications API
+
+  getApplication(id: string): Observable<Result<ApplicationDto>> {
+    const url = `/applications/${id}`;
+    return this.get(url);
+  }
+
+  getApplications(query?: SearchableQuery): Observable<PagedResult<ApplicationDto>> {
+    const url = `/applications?${this.stringfySearchableQuery(query)}`;
+    return this.get(url);
+  }
+
+  createApplication(command: CreateApplicationCommand): Observable<Result> {
+    const url = `/applications`;
+    return this.post(url, command);
+  }
+
+  updateApplication(command: UpdateApplicationCommand): Observable<Result> {
+    const url = `/applications/${command.id}`;
+    return this.put(url, command);
+  }
+
+  deleteApplication(clientId: string): Observable<Result> {
+    const url = `/applications/${clientId}`;
     return this.delete(url);
   }
 

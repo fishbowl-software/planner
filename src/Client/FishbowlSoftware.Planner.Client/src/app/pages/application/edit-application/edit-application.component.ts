@@ -1,19 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {ReactiveFormsModule, FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, RouterModule} from '@angular/router';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
-import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {InputTextModule} from 'primeng/inputtext';
-import {UserDto, UpdateClientCommand} from '@core/models';
-import {ApiService, ToastService} from '@core/services';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ValidationSummaryComponent} from '@shared/components';
+import {UpdateApplicationCommand} from '@core/models';
+import {ApiService, ToastService} from '@core/services';
 
 @Component({
-  selector: 'app-edit-client',
+  selector: 'app-edit-application',
   standalone: true,
-  templateUrl: './edit-client.component.html',
+  templateUrl: './edit-application.component.html',
   imports: [
     RouterModule,
     ButtonModule,
@@ -23,13 +24,13 @@ import {ValidationSummaryComponent} from '@shared/components';
     AutoCompleteModule,
     ReactiveFormsModule,
     InputTextModule,
+    InputTextareaModule,
   ],
 })
-export class EditClientComponent implements OnInit {
+export class EditApplicationComponent implements OnInit {
   public id!: string;
   public isLoading = false;
-  public suggestedUsers: UserDto[] = [];
-  public form: FormGroup<UpdateClientForm>;
+  public form: FormGroup<UpdateApplicationForm>;
 
   constructor(
     private readonly apiService: ApiService,
@@ -37,9 +38,9 @@ export class EditClientComponent implements OnInit {
     private readonly route: ActivatedRoute,
   )
   {
-    this.form = new FormGroup<UpdateClientForm>({
+    this.form = new FormGroup<UpdateApplicationForm>({
       name: new FormControl('', {validators: Validators.required, nonNullable: true}),
-      userAccount: new FormControl(null),
+      description: new FormControl(null),
     });
   }
 
@@ -48,15 +49,7 @@ export class EditClientComponent implements OnInit {
       this.id = params['id'];
     });
 
-    this.fetchClient();
-  }
-
-  searchUser(event: {query: string}) {
-    this.apiService.getUsers({search: event.query}).subscribe(result => {
-      if (result.isSuccess && result.data) {
-        this.suggestedUsers = result.data;
-      }
-    });
+    this.fetchApplication();
   }
 
   submit() {
@@ -66,18 +59,15 @@ export class EditClientComponent implements OnInit {
 
     this.isLoading = true;
 
-    const command: UpdateClientCommand = {
+    const command: UpdateApplicationCommand = {
       id: this.id,
       name: this.form.value.name!,
-      userId: this.form.value.userAccount?.id,
+      description: this.form.value.description!,
     };
 
-    console.log(command);
-    
-
-    this.apiService.updateClient(command).subscribe((result) => {
+    this.apiService.updateApplication(command).subscribe((result) => {
       if (result.isSuccess) {
-        this.toastService.showSuccess('The client details has been updated successfully');
+        this.toastService.showSuccess('The application details has been updated successfully');
         this.form.reset();
       }
 
@@ -85,14 +75,14 @@ export class EditClientComponent implements OnInit {
     });
   }
 
-  private fetchClient() {
+  private fetchApplication() {
     this.isLoading = true;
 
-    this.apiService.getClient(this.id).subscribe((result) => {
+    this.apiService.getApplication(this.id).subscribe((result) => {
       if (result.isSuccess) {
         this.form.patchValue({
           name: result.data.name,
-          userAccount: result.data.user,
+          description: result.data.description,
         });
       }
 
@@ -101,7 +91,7 @@ export class EditClientComponent implements OnInit {
   }
 }
 
-interface UpdateClientForm {
+interface UpdateApplicationForm {
   name: FormControl<string>;
-  userAccount: FormControl<UserDto | null>;
+  description: FormControl<string | null>;
 }

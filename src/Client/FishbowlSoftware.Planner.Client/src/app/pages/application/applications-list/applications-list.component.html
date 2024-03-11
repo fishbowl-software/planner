@@ -1,15 +1,15 @@
 <p-confirmDialog></p-confirmDialog>
 
 <div class="d-flex align-items-center">
-  <h1>Projects List</h1>
+  <h1>Applications List</h1>
   <p-button
     styleClass="ms-2"
     icon="bi bi-plus-square-fill"
     size="large"
     [rounded]="true"
     [text]="true"
-    pTooltip="Add a new project"
-    [routerLink]="['/projects/add']">
+    pTooltip="Add a new application"
+    [routerLink]="['/applications/add']">
   </p-button>
 </div>
 <hr class="w-100">
@@ -17,7 +17,7 @@
 <p-card>
   <div class="row">
     <div class="col-12">
-      <p-table [value]="projects" responsiveLayout="scroll" [lazy]="true" [paginator]="true"
+      <p-table [value]="applications" responsiveLayout="scroll" [lazy]="true" [paginator]="true"
         [showCurrentPageReport]="true" (onLazyLoad)="load($event)" [rows]="10" [(first)]="first"
         [totalRecords]="totalRecords" [loading]="isLoading" [rowsPerPageOptions]="[10,25,50]">
         <ng-template pTemplate="caption">
@@ -45,26 +45,26 @@
             <th>Action</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-project>
+        <ng-template pTemplate="body" let-application>
           <tr>
-            <td>{{project.name}}</td>
-            <td>{{project.description}}</td>
-            <td>{{project.createdDate}}</td>
+            <td>{{application.name}}</td>
+            <td>{{application.description}}</td>
+            <td>{{application.createdDate}}</td>
             
             <td class="overflow-visible">
               <p-button
                 icon="bi bi-pencil"
-                pTooltip="Edit project details"
+                pTooltip="Edit application details"
                 tooltipPosition="bottom"
-                [routerLink]="['/projects/edit', project.id]">
+                [routerLink]="['/applications/edit', application.id]">
               </p-button>
               <p-button
                 styleClass="ms-2"
                 icon="bi bi-trash"
                 severity="danger"
-                pTooltip="Delete project"
+                pTooltip="Delete application"
                 tooltipPosition="bottom"
-                (onClick)="confirmToDelete(project)">
+                (onClick)="confirmToDelete(application)">
               </p-button>
             </td>
           </tr>

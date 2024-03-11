@@ -31,7 +31,6 @@
             ],
             "styles": [
               "src/styles/imports.scss",
-              "src/styles/global.scss",
               "src/styles/reboot.scss",
               "src/styles/utils.scss",
               {

@@ -4,11 +4,11 @@ import {TableLazyLoadEvent, TableModule} from 'primeng/table';
 import {CardModule} from 'primeng/card';
 import {TooltipModule} from 'primeng/tooltip';
 import {ButtonModule} from 'primeng/button';
+import {ConfirmationService} from 'primeng/api';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ClientDto} from '@core/models';
 import {ApiService, ToastService} from '@core/services';
 import {SortUtils} from '@shared/utils';
-import {ConfirmationService} from 'primeng/api';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-clients-list',
