@@ -8,7 +8,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ValidationSummaryComponent} from '@shared/components';
-import {CreateProjectCommand} from '@core/models';
+import {ClientDto, CreateProjectCommand} from '@core/models';
 import {ApiService, ToastService} from '@core/services';
 
 @Component({
@@ -28,6 +28,7 @@ import {ApiService, ToastService} from '@core/services';
   ],
 })
 export class AddProjectComponent {
+  public suggestedClients: ClientDto[] = [];
   public isLoading = false;
   public form: FormGroup<CreateProjectForm>;
 
@@ -38,7 +39,16 @@ export class AddProjectComponent {
   {
     this.form = new FormGroup<CreateProjectForm>({
       name: new FormControl('', {validators: Validators.required, nonNullable: true}),
+      client: new FormControl(null, {validators: Validators.required, nonNullable: false}),
       description: new FormControl(null),
+    });
+  }
+
+  searchClient(event: {query: string}) {
+    this.apiService.getClients({search: event.query}).subscribe(result => {
+      if (result.isSuccess && result.data) {
+        this.suggestedClients = result.data;
+      }
     });
   }
 
@@ -51,6 +61,7 @@ export class AddProjectComponent {
 
     const command: CreateProjectCommand = {
       name: this.form.value.name!,
+      clientId: this.form.value.client!.id,
       description: this.form.value.description!,
     };
 
@@ -67,5 +78,6 @@ export class AddProjectComponent {
 
 interface CreateProjectForm {
   name: FormControl<string>;
+  client: FormControl<ClientDto | null>;
   description: FormControl<string | null>;
 }

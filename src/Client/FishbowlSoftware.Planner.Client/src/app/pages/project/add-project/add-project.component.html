@@ -16,6 +16,19 @@
           <input pInputText id="name" formControlName="name" class="w-100" />
         </div>
         <div class="mb-3">
+          <label for="client" class="form-label">Client <span class="text-danger">*</span></label>
+          <p-autoComplete 
+            formControlName="client" 
+            styleClass="w-100" 
+            inputStyleClass="w-100"
+            placeholder="Type client name" 
+            field="name" 
+            [minLength]="3" 
+            [suggestions]="suggestedClients"
+            (completeMethod)="searchClient($event)">
+          </p-autoComplete>
+        </div>
+        <div class="mb-3">
           <label for="description" class="form-label">Description</label>
           <textarea pInputTextarea id="description" formControlName="description" class="w-100" rows="5"></textarea>
         </div>

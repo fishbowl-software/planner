@@ -8,7 +8,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ValidationSummaryComponent} from '@shared/components';
-import {UpdateProjectCommand} from '@core/models';
+import {ClientDto, UpdateProjectCommand} from '@core/models';
 import {ApiService, ToastService} from '@core/services';
 
 @Component({
@@ -30,6 +30,7 @@ import {ApiService, ToastService} from '@core/services';
 export class EditProjectComponent implements OnInit {
   public id!: string;
   public isLoading = false;
+  public suggestedClients: ClientDto[] = [];
   public form: FormGroup<UpdateProjectForm>;
 
   constructor(
@@ -40,6 +41,7 @@ export class EditProjectComponent implements OnInit {
   {
     this.form = new FormGroup<UpdateProjectForm>({
       name: new FormControl('', {validators: Validators.required, nonNullable: true}),
+      client: new FormControl(null, {validators: Validators.required, nonNullable: false}),
       description: new FormControl(null),
     });
   }
@@ -50,6 +52,14 @@ export class EditProjectComponent implements OnInit {
     });
 
     this.fetchProject();
+  }
+
+  searchClient(event: {query: string}) {
+    this.apiService.getClients({search: event.query}).subscribe(result => {
+      if (result.isSuccess && result.data) {
+        this.suggestedClients = result.data;
+      }
+    });
   }
 
   submit() {
@@ -93,5 +103,6 @@ export class EditProjectComponent implements OnInit {
 
 interface UpdateProjectForm {
   name: FormControl<string>;
+  client: FormControl<ClientDto | null>;
   description: FormControl<string | null>;
 }

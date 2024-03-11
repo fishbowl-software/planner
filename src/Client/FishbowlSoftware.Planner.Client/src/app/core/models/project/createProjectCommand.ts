@@ -1,4 +1,5 @@
 export interface CreateProjectCommand {
   name: string;
-  description: string;
+  clientId: string;
+  description: string | null;
 }

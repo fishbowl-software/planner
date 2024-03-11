@@ -1,4 +1,5 @@
 export interface CreateApplicationCommand {
   name: string;
-  description: string;
+  description: string | null;
+  projectId: string;
 }
